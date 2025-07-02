@@ -95,9 +95,4 @@ requirements.txt
 - Permitir edição da resposta sugerida
 - Melhorar tratamento de erros e logs
 
----
-
-## Contato
-
-Para dúvidas ou sugestões, abra uma issue ou entre em contato com o responsável pelo projeto.
 
