@@ -1,16 +1,1 @@
-# Ignora ambiente virtual
 venv/
-
-# Ignora cache de Python
-__pycache__/
-
-# Ignora arquivos compilados do Python
-*.pyc
-*.pyo
-
-# Ignora node_modules (se estiver usando frontend com Node)
-node_modules/
-
-# Ignora configurações locais
-*.env
-.env
