@@ -23,33 +23,25 @@ Criado para uma empresa do setor financeiro que lida com um alto volume de email
 
 ---
 
+
 ## Como Executar o Projeto
 
-### Backend (Flask)
-1. Instale as dependências:
+1. Crie um ambiente virtual Python (recomendado):
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate
+   ```
+2. Instale as dependências do backend:
    ```bash
    pip install -r requirements.txt
    ```
-2. Execute o servidor Flask:
+3. Execute o projeto (backend e frontend juntos) usando o script:
    ```bash
-   python app.py
+   ./start.sh
    ```
-   O backend estará disponível em `http://localhost:5000`.
+   O backend estará disponível em `http://localhost:5000` e o frontend em `http://localhost:3000`.
 
-### Frontend (Next.js)
-1. Acesse a pasta `frontend`:
-   ```bash
-   cd frontend
-   ```
-2. Instale as dependências:
-   ```bash
-   npm install
-   ```
-3. Execute o frontend:
-   ```bash
-   npm run dev
-   ```
-   O frontend estará disponível em `http://localhost:3000`.
+> Certifique-se de que o Node.js está instalado para o frontend funcionar corretamente.
 
 ---
 
