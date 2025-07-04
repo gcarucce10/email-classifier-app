@@ -92,10 +92,8 @@ requirements.txt
 
 ## Próximos Passos / Melhorias
 
-- Implementar persistência dos resultados (banco de dados)
-- Permitir edição e cópia da resposta sugerida
+- Permitir edição da resposta sugerida
 - Melhorar tratamento de erros e logs
-- Adicionar autenticação de usuários
 
 ---
 
