@@ -2,52 +2,47 @@
 
 import type React from "react"
 
-// React hook para gerenciar estados locais do componente
 import { useState } from "react"
 
-// Ícones utilizados na interface
 import { Upload, Mail, FileText, Loader2, CheckCircle, XCircle, Edit3, Save, X } from "lucide-react"
 
-// Componentes de UI reutilizáveis
 import { Button } from "@/components/ui/button"
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+
 import { Textarea } from "@/components/ui/textarea"
+
 import { Label } from "@/components/ui/label"
+
 import { Input } from "@/components/ui/input"
+
 import { Badge } from "@/components/ui/badge"
+
 import { Alert, AlertDescription } from "@/components/ui/alert"
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-// Interface para o resultado da classificação retornado pelo backend
 interface ClassificationResult {
-  category: "Produtivo" | "Improdutivo" // Categoria do email
-  confidence: number // Confiança da classificação (0-1)
-  suggested_response: string // Resposta sugerida pela IA
-  email_content: string // Conteúdo original do email
+  category: "Produtivo" | "Improdutivo"
+  confidence: number
+  suggested_response: string
+  email_content: string
 }
 
-
 export default function EmailClassifier() {
-  // Estado para o texto do email digitado pelo usuário
   const [emailText, setEmailText] = useState("")
-  // Estado para o arquivo selecionado (txt ou pdf)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
-  // Estado de carregamento (enquanto aguarda resposta do backend)
   const [isLoading, setIsLoading] = useState(false)
-  // Resultado da classificação retornado pelo backend
   const [result, setResult] = useState<ClassificationResult | null>(null)
-  // Mensagem de erro (caso ocorra)
   const [error, setError] = useState<string | null>(null)
 
-  // Estados para edição da resposta sugerida
+  // Estados para edição da resposta
   const [isEditingResponse, setIsEditingResponse] = useState(false)
   const [editedResponse, setEditedResponse] = useState("")
 
-  // Manipula a seleção de arquivo pelo usuário
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
-      // Aceita apenas arquivos .txt ou .pdf
       if (file.type === "text/plain" || file.type === "application/pdf") {
         setSelectedFile(file)
         setError(null)
@@ -58,7 +53,6 @@ export default function EmailClassifier() {
     }
   }
 
-  // Envia o email (texto ou arquivo) para o backend e processa o resultado
   const handleSubmit = async (type: "text" | "file") => {
     setIsLoading(true)
     setError(null)
@@ -68,7 +62,6 @@ export default function EmailClassifier() {
       const formData = new FormData()
 
       if (type === "text") {
-        // Valida se o campo de texto não está vazio
         if (!emailText.trim()) {
           setError("Por favor, insira o conteúdo do email")
           setIsLoading(false)
@@ -76,7 +69,6 @@ export default function EmailClassifier() {
         }
         formData.append("email_text", emailText)
       } else {
-        // Valida se um arquivo foi selecionado
         if (!selectedFile) {
           setError("Por favor, selecione um arquivo")
           setIsLoading(false)
@@ -85,13 +77,12 @@ export default function EmailClassifier() {
         formData.append("file", selectedFile)
       }
 
-      // Faz a requisição para o backend
-      const response = await fetch("http://localhost:5000/api/classify", {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000"
+      const response = await fetch(`${backendUrl}/api/classify`, {
         method: "POST",
         body: formData,
       })
 
-      // Trata erros HTTP e mensagens do backend
       if (!response.ok) {
         let errorMessage = "Erro ao processar o email"
         try {
@@ -103,16 +94,14 @@ export default function EmailClassifier() {
         throw new Error(errorMessage)
       }
 
-      // Recebe o resultado da classificação
       const result: ClassificationResult = await response.json()
       setResult(result)
-      setEditedResponse(result.suggested_response) // Inicializa campo de edição
-      setIsEditingResponse(false) // Garante que não está em modo de edição
+      setEditedResponse(result.suggested_response)
+      setIsEditingResponse(false)
     } catch (err) {
-      // Exibe erro detalhado no console e mensagem amigável ao usuário
       console.error("Erro detalhado:", err)
       if (err instanceof TypeError && err.message.includes("fetch")) {
-        setError("Erro de conexão: Verifique se o backend está rodando em http://localhost:5000")
+        setError("Erro de conexão: Verifique se o backend está funcionando")
       } else {
         setError(err instanceof Error ? err.message : "Erro ao processar o email. Tente novamente.")
       }
@@ -121,7 +110,6 @@ export default function EmailClassifier() {
     }
   }
 
-  // Reseta todos os estados do formulário para novo uso
   const resetForm = () => {
     setEmailText("")
     setSelectedFile(null)
@@ -131,13 +119,11 @@ export default function EmailClassifier() {
     setEditedResponse("")
   }
 
-  // Copia o texto da resposta para a área de transferência
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text)
       alert("Resposta copiada para a área de transferência!")
     } catch (err) {
-      // Fallback para navegadores antigos
       const textArea = document.createElement("textarea")
       textArea.value = text
       document.body.appendChild(textArea)
@@ -153,13 +139,11 @@ export default function EmailClassifier() {
     }
   }
 
-  // Ativa o modo de edição da resposta sugerida
   const handleEditResponse = () => {
     setIsEditingResponse(true)
     setEditedResponse(result?.suggested_response || "")
   }
 
-  // Salva a resposta editada pelo usuário
   const handleSaveResponse = () => {
     if (result) {
       setResult({
@@ -171,7 +155,6 @@ export default function EmailClassifier() {
     alert("Resposta salva com sucesso!")
   }
 
-  // Cancela a edição e restaura a resposta original
   const handleCancelEdit = () => {
     setIsEditingResponse(false)
     setEditedResponse(result?.suggested_response || "")
@@ -187,7 +170,7 @@ export default function EmailClassifier() {
               <Mail className="h-8 w-8 text-white" />
             </div>
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Classificador de Emails</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Classificador de Emails IA</h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Automatize a classificação de emails e obtenha sugestões de respostas inteligentes para otimizar o fluxo de
             trabalho da sua equipe
@@ -465,7 +448,7 @@ export default function EmailClassifier() {
 
         {/* Footer */}
         <div className="text-center mt-12 text-gray-500 text-sm">
-          <p>Classificador de Emails - Automatizando a gestão de comunicações</p>
+          <p>Classificador de Emails IA - Automatizando a gestão de comunicações</p>
         </div>
       </div>
     </div>

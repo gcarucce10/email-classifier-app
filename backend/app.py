@@ -11,7 +11,7 @@ app = Flask(__name__)
 # Configurar CORS para produção
 CORS(app, origins=[
     "http://localhost:3000",  # Desenvolvimento local
-    "https://seu-frontend.onrender.com",
+    "https://email-classifier-backend-9s0r.onrender.com",
     "*"  # Temporário para testes - remover em produção
 ])
 

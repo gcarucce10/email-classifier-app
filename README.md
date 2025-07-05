@@ -54,15 +54,24 @@ O sistema é composto por um backend em Flask responsável por receber, pré-pro
    python -m venv .venv
    source .venv/bin/activate
    ```
+   
 3. Instale as dependências do backend:
    ```bash
    pip install -r requirements.txt
+   python -m spacy download pt_core_news_md
    ```
+
 4. Execute o projeto (backend e frontend juntos) usando o script:
    ```bash
    ./start.sh
    ```
    A aplicação estará disponível em `http://localhost:3000`.
+
+> **Importante:** Após instalar as dependências, execute também:
+> ```bash
+> python -m spacy download pt_core_news_md
+> ```
+> Isso garante que o modelo de português do spaCy estará disponível para o backend.
 
 > Certifique-se de que o Node.js está instalado para o frontend funcionar corretamente.
 
