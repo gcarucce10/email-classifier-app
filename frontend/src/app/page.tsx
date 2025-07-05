@@ -2,43 +2,52 @@
 
 import type React from "react"
 
+// React hook para gerenciar estados locais do componente
 import { useState } from "react"
 
-import { Upload, Mail, FileText, Loader2, CheckCircle, XCircle } from "lucide-react"
+// Ícones utilizados na interface
+import { Upload, Mail, FileText, Loader2, CheckCircle, XCircle, Edit3, Save, X } from "lucide-react"
 
+// Componentes de UI reutilizáveis
 import { Button } from "@/components/ui/button"
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-
 import { Textarea } from "@/components/ui/textarea"
-
 import { Label } from "@/components/ui/label"
-
 import { Input } from "@/components/ui/input"
-
 import { Badge } from "@/components/ui/badge"
-
 import { Alert, AlertDescription } from "@/components/ui/alert"
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
+// Interface para o resultado da classificação retornado pelo backend
 interface ClassificationResult {
-  category: "Produtivo" | "Improdutivo"
-  confidence: number
-  suggested_response: string
-  email_content: string
+  category: "Produtivo" | "Improdutivo" // Categoria do email
+  confidence: number // Confiança da classificação (0-1)
+  suggested_response: string // Resposta sugerida pela IA
+  email_content: string // Conteúdo original do email
 }
 
+
 export default function EmailClassifier() {
+  // Estado para o texto do email digitado pelo usuário
   const [emailText, setEmailText] = useState("")
+  // Estado para o arquivo selecionado (txt ou pdf)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  // Estado de carregamento (enquanto aguarda resposta do backend)
   const [isLoading, setIsLoading] = useState(false)
+  // Resultado da classificação retornado pelo backend
   const [result, setResult] = useState<ClassificationResult | null>(null)
+  // Mensagem de erro (caso ocorra)
   const [error, setError] = useState<string | null>(null)
 
+  // Estados para edição da resposta sugerida
+  const [isEditingResponse, setIsEditingResponse] = useState(false)
+  const [editedResponse, setEditedResponse] = useState("")
+
+  // Manipula a seleção de arquivo pelo usuário
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
+      // Aceita apenas arquivos .txt ou .pdf
       if (file.type === "text/plain" || file.type === "application/pdf") {
         setSelectedFile(file)
         setError(null)
@@ -49,6 +58,7 @@ export default function EmailClassifier() {
     }
   }
 
+  // Envia o email (texto ou arquivo) para o backend e processa o resultado
   const handleSubmit = async (type: "text" | "file") => {
     setIsLoading(true)
     setError(null)
@@ -58,6 +68,7 @@ export default function EmailClassifier() {
       const formData = new FormData()
 
       if (type === "text") {
+        // Valida se o campo de texto não está vazio
         if (!emailText.trim()) {
           setError("Por favor, insira o conteúdo do email")
           setIsLoading(false)
@@ -65,6 +76,7 @@ export default function EmailClassifier() {
         }
         formData.append("email_text", emailText)
       } else {
+        // Valida se um arquivo foi selecionado
         if (!selectedFile) {
           setError("Por favor, selecione um arquivo")
           setIsLoading(false)
@@ -73,12 +85,13 @@ export default function EmailClassifier() {
         formData.append("file", selectedFile)
       }
 
-      // Conecta com backend Flask
+      // Faz a requisição para o backend
       const response = await fetch("http://localhost:5000/api/classify", {
         method: "POST",
         body: formData,
       })
 
+      // Trata erros HTTP e mensagens do backend
       if (!response.ok) {
         let errorMessage = "Erro ao processar o email"
         try {
@@ -90,9 +103,13 @@ export default function EmailClassifier() {
         throw new Error(errorMessage)
       }
 
+      // Recebe o resultado da classificação
       const result: ClassificationResult = await response.json()
       setResult(result)
+      setEditedResponse(result.suggested_response) // Inicializa campo de edição
+      setIsEditingResponse(false) // Garante que não está em modo de edição
     } catch (err) {
+      // Exibe erro detalhado no console e mensagem amigável ao usuário
       console.error("Erro detalhado:", err)
       if (err instanceof TypeError && err.message.includes("fetch")) {
         setError("Erro de conexão: Verifique se o backend está rodando em http://localhost:5000")
@@ -104,18 +121,23 @@ export default function EmailClassifier() {
     }
   }
 
+  // Reseta todos os estados do formulário para novo uso
   const resetForm = () => {
     setEmailText("")
     setSelectedFile(null)
     setResult(null)
     setError(null)
+    setIsEditingResponse(false)
+    setEditedResponse("")
   }
 
+  // Copia o texto da resposta para a área de transferência
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text)
       alert("Resposta copiada para a área de transferência!")
     } catch (err) {
+      // Fallback para navegadores antigos
       const textArea = document.createElement("textarea")
       textArea.value = text
       document.body.appendChild(textArea)
@@ -129,6 +151,30 @@ export default function EmailClassifier() {
       }
       document.body.removeChild(textArea)
     }
+  }
+
+  // Ativa o modo de edição da resposta sugerida
+  const handleEditResponse = () => {
+    setIsEditingResponse(true)
+    setEditedResponse(result?.suggested_response || "")
+  }
+
+  // Salva a resposta editada pelo usuário
+  const handleSaveResponse = () => {
+    if (result) {
+      setResult({
+        ...result,
+        suggested_response: editedResponse,
+      })
+    }
+    setIsEditingResponse(false)
+    alert("Resposta salva com sucesso!")
+  }
+
+  // Cancela a edição e restaura a resposta original
+  const handleCancelEdit = () => {
+    setIsEditingResponse(false)
+    setEditedResponse(result?.suggested_response || "")
   }
 
   return (
@@ -162,17 +208,17 @@ export default function EmailClassifier() {
               </CardHeader>
               <CardContent className="p-6 bg-white">
                 <Tabs defaultValue="text" className="w-full">
-                  <TabsList className="grid w-full grid-cols-2 mb-6 bg-gray-100">
+                  <TabsList className="grid w-full grid-cols-2 mb-6 bg-orange-100 border border-orange-200">
                     <TabsTrigger
                       value="text"
-                      className="flex items-center gap-2 bg-white data-[state=active]:bg-white data-[state=active]:text-gray-900"
+                      className="flex items-center gap-2 text-gray-700 data-[state=active]:bg-orange-600 data-[state=active]:text-white data-[state=active]:shadow-sm hover:bg-orange-200 transition-colors"
                     >
                       <FileText className="h-4 w-4" />
                       Inserir Texto
                     </TabsTrigger>
                     <TabsTrigger
                       value="file"
-                      className="flex items-center gap-2 bg-white data-[state=active]:bg-white data-[state=active]:text-gray-900"
+                      className="flex items-center gap-2 text-gray-700 data-[state=active]:bg-orange-600 data-[state=active]:text-white data-[state=active]:shadow-sm hover:bg-orange-200 transition-colors"
                     >
                       <Upload className="h-4 w-4" />
                       Upload de Arquivo
@@ -320,48 +366,97 @@ export default function EmailClassifier() {
                   <CardTitle className="flex items-center gap-2 text-gray-900">
                     <Mail className="h-5 w-5 text-orange-600" />
                     Resposta Automática Sugerida
+                    {isEditingResponse && (
+                      <Badge variant="outline" className="ml-2 text-orange-600 border-orange-200">
+                        Editando
+                      </Badge>
+                    )}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-6 bg-white">
-                  <div className="bg-gray-50 p-4 rounded-lg border">
-                    <p className="text-gray-800 leading-relaxed">{result.suggested_response}</p>
-                  </div>
+                  {!isEditingResponse ? (
+                    <div className="bg-gray-50 p-4 rounded-lg border">
+                      <p className="text-gray-800 leading-relaxed whitespace-pre-wrap">{result.suggested_response}</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <Label htmlFor="edit-response" className="text-sm font-medium text-gray-800">
+                        Editar Resposta
+                      </Label>
+                      <Textarea
+                        id="edit-response"
+                        value={editedResponse}
+                        onChange={(e) => setEditedResponse(e.target.value)}
+                        className="min-h-[150px] bg-white border-orange-200 focus:border-orange-400 focus:ring-orange-400 text-gray-900 placeholder:text-gray-500"
+                        placeholder="Digite sua resposta personalizada..."
+                      />
+                    </div>
+                  )}
+
                   <div className="flex gap-2 mt-4">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="bg-white border-orange-200 text-orange-700 hover:bg-orange-50"
-                      onClick={() => copyToClipboard(result.suggested_response)}
-                    >
-                      Copiar Resposta
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="bg-white border-gray-200 text-gray-700 hover:bg-gray-50"
-                    >
-                      Editar Resposta
-                    </Button>
+                    {!isEditingResponse ? (
+                      <>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="bg-orange-600 border-orange-600 text-white hover:bg-orange-700 hover:text-white"
+                          onClick={() => copyToClipboard(result.suggested_response)}
+                        >
+                          Copiar Resposta
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="bg-white border-gray-200 text-gray-700 hover:bg-gray-50"
+                          onClick={handleEditResponse}
+                        >
+                          <Edit3 className="h-4 w-4 mr-1" />
+                          Editar Resposta
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button
+                          variant="default"
+                          size="sm"
+                          className="bg-orange-600 hover:bg-orange-700 text-white"
+                          onClick={handleSaveResponse}
+                        >
+                          <Save className="h-4 w-4 mr-1" />
+                          Salvar
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="bg-white border-gray-200 text-gray-700 hover:bg-gray-50"
+                          onClick={handleCancelEdit}
+                        >
+                          <X className="h-4 w-4 mr-1" />
+                          Cancelar
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="bg-orange-600 border-orange-600 text-white hover:bg-orange-700 hover:text-white"
+                          onClick={() => copyToClipboard(editedResponse)}
+                        >
+                          Copiar
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </CardContent>
               </Card>
 
               {/* Ações */}
-              <div className="flex gap-4 justify-center">
+              <div className="flex justify-center">
                 <Button
                   onClick={resetForm}
-                  variant="outline"
-                  size="lg"
-                  className="min-w-[150px] bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
-                >
-                  Novo Email
-                </Button>
-                <Button
                   variant="default"
                   size="lg"
                   className="min-w-[150px] bg-orange-600 hover:bg-orange-700 text-white"
                 >
-                  Salvar Resultado
+                  Novo Email
                 </Button>
               </div>
             </div>
@@ -370,7 +465,7 @@ export default function EmailClassifier() {
 
         {/* Footer */}
         <div className="text-center mt-12 text-gray-500 text-sm">
-          <p>Classificador de Emails IA - Automatizando a gestão de comunicações</p>
+          <p>Classificador de Emails - Automatizando a gestão de comunicações</p>
         </div>
       </div>
     </div>

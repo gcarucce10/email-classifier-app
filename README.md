@@ -11,20 +11,38 @@ Criado para uma empresa do setor financeiro que lida com um alto volume de email
 
 ---
 
-## Funcionalidades Implementadas
+## Categorias de Classificação
 
-- Upload de emails em formato `.txt` ou `.pdf` ou colagem direta do texto.
-- Pré-processamento de texto em português (remoção de stopwords, lematização, etc).
-- Classificação automática dos emails em **Produtivo** ou **Improdutivo** usando IA (Google Gemini API).
-- Sugestão automática de resposta baseada na categoria do email.
-- Interface web moderna e responsiva (Next.js/React + TailwindCSS).
-- Exibição do resultado da classificação, confiança e resposta sugerida.
-- Mensagens de erro amigáveis e feedback visual.
+- **Produtivo:** Emails que requerem uma ação ou resposta específica (ex.: solicitações de suporte técnico, atualização sobre casos em aberto, dúvidas sobre o sistema).
+- **Improdutivo:** Emails que não necessitam de uma ação imediata (ex.: mensagens de felicitações, agradecimentos).
 
 ---
 
+## Visão Geral do Projeto
 
-## Como Executar o Projeto
+O sistema é composto por um backend em Flask responsável por receber, pré-processar e classificar emails, além de sugerir respostas automáticas utilizando IA generativa (Google Gemini). O frontend, desenvolvido em Next.js/React, oferece uma interface moderna e responsiva para o usuário interagir, enviar emails (texto ou arquivo), visualizar a classificação, confiança e editar/copiar a resposta sugerida.
+
+---
+
+### Principais Fluxos:
+
+1. **Envio do Email:** O usuário pode colar o texto do email ou fazer upload de arquivos `.txt` ou `.pdf`.
+2. **Pré-processamento:** O backend limpa e prepara o texto (tokenização, remoção de stopwords, lematização).
+3. **Classificação:** O texto é enviado para a API Gemini, que retorna se o email é "Produtivo" ou "Improdutivo" e o grau de confiança.
+4. **Sugestão de Resposta:** A IA sugere uma resposta automática adequada ao contexto do email.
+5. **Interação do Usuário:** O usuário pode copiar, editar e salvar a resposta sugerida, além de iniciar um novo processo facilmente.
+
+---
+
+## Tecnologias Utilizadas
+
+- **Backend:** Python, Flask, pdfminer (extração de texto de PDFs), NLTK e spaCy (pré-processamento de texto)
+- **IA/ML:** Google Gemini API (classificação e sugestão de resposta)
+- **Frontend:** React, Next.js, TailwindCSS
+
+---
+
+## Como Executar
 
 1. Crie um ambiente virtual Python (recomendado):
    ```bash
@@ -39,7 +57,7 @@ Criado para uma empresa do setor financeiro que lida com um alto volume de email
    ```bash
    ./start.sh
    ```
-   O backend estará disponível em `http://localhost:5000` e o frontend em `http://localhost:3000`.
+   O aplicação estará disponível em `http://localhost:3000`.
 
 > Certifique-se de que o Node.js está instalado para o frontend funcionar corretamente.
 
@@ -65,26 +83,12 @@ requirements.txt
 
 ---
 
-## Categorias de Classificação
+### Diferenciais:
 
-- **Produtivo:** Emails que requerem uma ação ou resposta específica (ex.: solicitações de suporte técnico, atualização sobre casos em aberto, dúvidas sobre o sistema).
-- **Improdutivo:** Emails que não necessitam de uma ação imediata (ex.: mensagens de felicitações, agradecimentos).
-
----
-
-## Tecnologias Utilizadas
-
-- Python, Flask
-- NLTK, spaCy (pré-processamento de texto)
-- Google Gemini API (classificação e sugestão de resposta)
-- React, Next.js, TailwindCSS (frontend)
-- pdfminer (extração de texto de PDFs)
-
----
-
-## Próximos Passos / Melhorias
-
-- Permitir edição da resposta sugerida
-- Melhorar tratamento de erros e logs
+- Interface intuitiva e responsiva, pronta para uso corporativo.
+- Suporte a múltiplos formatos de entrada (texto, .txt, .pdf).
+- Feedback visual e mensagens de erro amigáveis.
+- Possibilidade de edição e cópia da resposta sugerida.
+- Estrutura de código modular e pronta para expansão (ex: persistência, autenticação, logs avançados).
 
 
