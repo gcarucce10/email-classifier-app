@@ -170,7 +170,7 @@ export default function EmailClassifier() {
               <Mail className="h-8 w-8 text-white" />
             </div>
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Classificador de Emails IA</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Classificador de Emails</h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Automatize a classificação de emails e obtenha sugestões de respostas inteligentes para otimizar o fluxo de
             trabalho da sua equipe
@@ -448,7 +448,7 @@ export default function EmailClassifier() {
 
         {/* Footer */}
         <div className="text-center mt-12 text-gray-500 text-sm">
-          <p>Classificador de Emails IA - Automatizando a gestão de comunicações</p>
+          <p>Classificador de Emails - Automatizando a gestão de comunicações</p>
         </div>
       </div>
     </div>

@@ -65,7 +65,11 @@ O sistema é composto por um backend em Flask responsável por receber, pré-pro
    ```bash
    ./start.sh
    ```
-   A aplicação estará disponível em `http://localhost:3000`.
+
+   A aplicação estará disponível em `http://localhost:3000` (ambiente local).
+
+   Ou acesse a versão online já implantada em produção:
+   👉 **https://email-classifier-frontend.onrender.com/**
 
 > **Importante:** Após instalar as dependências, execute também:
 > ```bash
