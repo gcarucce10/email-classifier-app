@@ -5,16 +5,17 @@ from gemini_client import classify_email_gemini, generate_reply_gemini
 from utils import extract_email_text
 import os
 
+# Cria a aplicação Flask
 app = Flask(__name__)
 
-# Configura CORS para produção
+# Configurar CORS para produção
 CORS(app, origins=[
     "http://localhost:3000",  # Desenvolvimento local
-    "https://seu-frontend.onrender.com", 
+    "https://seu-frontend.onrender.com",
     "*"  # Temporário para testes - remover em produção
 ])
 
-# Define a chave secreta
+# Define a chave secreta para uso de mensagens flash
 app.secret_key = os.environ.get("SECRET_KEY", "secret_key_fallback")
 
 @app.route("/", methods=["GET"])
@@ -63,7 +64,7 @@ def classify_api():
         # Gera uma resposta automática baseada na classificação
         resposta = generate_reply_gemini(categoria, texto_original)
         
-        # Calcula uma confiança simulada 
+        # Calcula uma confiança simulada (você pode implementar uma lógica real)
         confidence = 0.85 if "suporte" in texto_original.lower() or "solicitação" in texto_original.lower() else 0.75
         
         # Retorna o resultado em JSON
@@ -81,8 +82,14 @@ def classify_api():
             "error": f"Erro interno do servidor: {str(e)}"
         }), 500
 
+# CONFIGURAÇÃO PARA PRODUÇÃO NO RENDER
 if __name__ == "__main__":
-    # Configuração para produção
+    # Pega a porta do ambiente (Render define automaticamente)
     port = int(os.environ.get('PORT', 5000))
-    debug_mode = os.environ.get('FLASK_ENV') == 'development'
-    app.run(host='0.0.0.0', port=port, debug=debug_mode)
+    
+    # Roda a aplicação
+    app.run(
+        host='0.0.0.0',  # Permite conexões externas
+        port=port,       # Usa a porta do Render
+        debug=False      # Desabilita debug em produção
+    )
