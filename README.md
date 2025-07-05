@@ -44,20 +44,25 @@ O sistema é composto por um backend em Flask responsável por receber, pré-pro
 
 ## Como Executar
 
-1. Crie um ambiente virtual Python (recomendado):
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/gcarucce10/emailClassifier.git
+   cd emailClassifier
+   ```
+2. Crie um ambiente virtual Python (recomendado):
    ```bash
    python -m venv .venv
    source .venv/bin/activate
    ```
-2. Instale as dependências do backend:
+3. Instale as dependências do backend:
    ```bash
    pip install -r requirements.txt
    ```
-3. Execute o projeto (backend e frontend juntos) usando o script:
+4. Execute o projeto (backend e frontend juntos) usando o script:
    ```bash
    ./start.sh
    ```
-   O aplicação estará disponível em `http://localhost:3000`.
+   A aplicação estará disponível em `http://localhost:3000`.
 
 > Certifique-se de que o Node.js está instalado para o frontend funcionar corretamente.
 
