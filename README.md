@@ -69,10 +69,8 @@ O sistema é composto por um backend em Flask responsável por receber, pré-pro
 project/
   app.py                # Backend Flask principal
   gemini_client.py      # Integração com Google Gemini API
-  model_classifier.py   # (Opcional) Lógica de classificação local
   preprocess.py         # Funções de pré-processamento de texto
   routes.py             # Rotas Flask (separadas, opcional)
-  static/               # Arquivos estáticos (Flask)
   templates/            # Templates HTML (Flask)
 frontend/
   src/app/page.tsx      # Página principal Next.js/React
