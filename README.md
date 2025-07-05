@@ -77,6 +77,7 @@ frontend/
   ...                   # Outros arquivos do frontend
 README.md
 requirements.txt
+start.sh                # Shell script para iniciar o projeto
 ```
 
 ---
