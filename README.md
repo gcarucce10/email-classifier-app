@@ -83,7 +83,7 @@ frontend/
 README.md
 requirements.txt
 start.sh                # Shell script para iniciar o projeto
-render.yaml           # Configuração do Render (deploy)
+render.yaml             # Configuração do Render (deploy)
 ```
 
 ---
