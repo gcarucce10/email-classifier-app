@@ -69,8 +69,9 @@ O sistema é composto por um backend em Flask responsável por receber, pré-pro
 
    A aplicação estará disponível em `http://localhost:3000` (ambiente local).
 
-   Ou acesse a versão online já implantada em produção:
-   👉 **https://email-classifier-frontend.onrender.com/**
+   Ou acesse a versão online já implantada em produção:  
+👉 <a href="https://email-classifier-frontend.onrender.com/" target="_blank"><strong>https://email-classifier-frontend.onrender.com/</strong></a>
+
 
 > Certifique-se de que o Node.js está instalado para o frontend funcionar corretamente.
 
