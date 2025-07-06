@@ -39,6 +39,7 @@ O sistema é composto por um backend em Flask responsável por receber, pré-pro
 - **Backend:** Python, Flask, pdfminer (extração de texto de PDFs), NLTK e spaCy (pré-processamento de texto)
 - **IA/ML:** Google Gemini API (classificação e sugestão de resposta)
 - **Frontend:** React, Next.js, TailwindCSS
+- **Deploy:** Render 
 
 ---
 
