@@ -11,8 +11,8 @@ app = Flask(__name__)
 # Configurar CORS para produção
 CORS(app, origins=[
     "http://localhost:3000",  # Desenvolvimento local
-    "https://email-classifier-backend-9s0r.onrender.com",
-    "*"  # Temporário para testes - remover em produção
+    "https://email-classifier-backend-9s0r.onrender.com", # URL do backend no Render
+    "*"  
 ])
 
 # Define a chave secreta para uso de mensagens flash
