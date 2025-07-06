@@ -80,11 +80,10 @@ O sistema é composto por um backend em Flask responsável por receber, pré-pro
 ## Estrutura do Projeto
 
 ```
-project/
+backend/
   app.py                # Backend Flask principal
   gemini_client.py      # Integração com Google Gemini API
   preprocess.py         # Funções de pré-processamento de texto
-  routes.py             # Rotas Flask (separadas, opcional)
   templates/            # Templates HTML (Flask)
 frontend/
   src/app/page.tsx      # Página principal Next.js/React
