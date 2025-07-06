@@ -70,7 +70,7 @@ O sistema é composto por um backend em Flask responsável por receber, pré-pro
    A aplicação estará disponível em `http://localhost:3000` (ambiente local).
 
    Ou acesse a versão online já implantada em produção:  
-👉 <a href="https://email-classifier-frontend.onrender.com/" target="_blank"><strong>https://email-classifier-frontend.onrender.com/</strong></a>
+👉 <a href="https://email-classifier-frontend.onrender.com/" target="_blank"><strong>https://email-classifier-frontend.onrender.com/</strong></a> (O Render pode adicionar uma tela de carregamento antes de mostrar a aplicação, apenas tenha paciência)
 
 
 > Certifique-se de que o Node.js está instalado para o frontend funcionar corretamente.
@@ -88,6 +88,9 @@ backend/
 frontend/
   src/app/page.tsx      # Página principal Next.js/React
   ...                   # Outros arquivos do frontend
+casos_de_teste/         # Casos de teste para o backend
+   improdutivo.pdf      # Exemplo de email improdutivo em .pdf
+   ...                  # Outros casos de teste
 README.md
 requirements.txt
 start.sh                # Shell script para iniciar o projeto
