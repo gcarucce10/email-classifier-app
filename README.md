@@ -72,12 +72,6 @@ O sistema é composto por um backend em Flask responsável por receber, pré-pro
    Ou acesse a versão online já implantada em produção:
    👉 **https://email-classifier-frontend.onrender.com/**
 
-> **Importante:** Após instalar as dependências, execute também:
-> ```bash
-> python -m spacy download pt_core_news_md
-> ```
-> Isso garante que o modelo de português do spaCy estará disponível para o backend.
-
 > Certifique-se de que o Node.js está instalado para o frontend funcionar corretamente.
 
 ---
