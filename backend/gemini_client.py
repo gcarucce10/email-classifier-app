@@ -89,6 +89,7 @@ def generate_reply_gemini(categoria: str, texto_original: str) -> str:
     Responda com:
     
     - "Prezado(a),"
+    
     - Uma frase de agradecimento ou retribuição do que foi desejado.
 
     Atenciosamente,

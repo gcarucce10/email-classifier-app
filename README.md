@@ -94,8 +94,8 @@ casos_de_teste/         # Casos de teste para o backend
 README.md
 requirements.txt
 start.sh                # Shell script para iniciar o projeto
-render.yaml             # Configuração do Render (deploy)
 ```
+
 
 ---
 
