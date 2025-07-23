@@ -1,6 +1,6 @@
 "use client"
 
-import { Mail, CalendarCheck, Trash2, Send } from 'lucide-react'
+import { Mail, CalendarCheck, Trash2, Send, Edit3, Save, X } from "lucide-react" // Adicionado Edit3, Save, X
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useEffect, useState } from "react"
@@ -16,7 +16,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Loader2 } from 'lucide-react'
+import { Loader2 } from "lucide-react"
+import { Textarea } from "@/components/ui/textarea" // Adicionado Textarea
 
 interface Resposta {
   id: number
@@ -38,6 +39,14 @@ export default function RespostasSugeridas() {
   const [isSendingEmail, setIsSendingEmail] = useState(false)
   const [sendEmailError, setSendEmailError] = useState<string | null>(null)
   const [sendEmailSuccess, setSendEmailSuccess] = useState<string | null>(null)
+
+  // Novos estados para o modal de edição
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [currentEditingResponse, setCurrentEditingResponse] = useState<Resposta | null>(null)
+  const [editedResponseText, setEditedResponseText] = useState("")
+  const [isSavingEdit, setIsSavingEdit] = useState(false)
+  const [editError, setEditError] = useState<string | null>(null)
+  const [editSuccess, setEditSuccess] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchRespostas = async () => {
@@ -134,6 +143,65 @@ export default function RespostasSugeridas() {
     }
   }
 
+  // Funções para edição
+  const handleEditClick = (resposta: Resposta) => {
+    setCurrentEditingResponse(resposta)
+    setEditedResponseText(resposta.suggested_response)
+    setEditError(null)
+    setEditSuccess(null)
+    setIsEditModalOpen(true)
+  }
+
+  const handleSaveEditedResponse = async () => {
+    if (!currentEditingResponse || !editedResponseText.trim()) {
+      setEditError("A resposta não pode estar vazia.")
+      return
+    }
+
+    setIsSavingEdit(true)
+    setEditError(null)
+    setEditSuccess(null)
+
+    try {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000"
+      const res = await fetch(`${backendUrl}/api/respostas/${currentEditingResponse.id}/editar`, {
+        // Note the /editar in the URL
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ nova_resposta: editedResponseText }), // <-- Alterado aqui
+      })
+
+      if (!res.ok) {
+        const errorData = await res.json()
+        throw new Error(errorData.error || "Erro ao salvar a resposta editada.")
+      }
+
+      // Atualiza a lista de respostas no estado local
+      setRespostas((prev) =>
+        prev.map((r) => (r.id === currentEditingResponse.id ? { ...r, suggested_response: editedResponseText } : r)),
+      )
+      setEditSuccess("Resposta salva com sucesso!")
+      setTimeout(() => {
+        setIsEditModalOpen(false)
+        setCurrentEditingResponse(null)
+        setEditedResponseText("")
+      }, 1500)
+    } catch (err: any) {
+      console.error("Erro ao salvar edição:", err)
+      setEditError(err.message || "Erro ao salvar a resposta. Tente novamente.")
+    } finally {
+      setIsSavingEdit(false)
+    }
+  }
+
+  const handleCancelEdit = () => {
+    setIsEditModalOpen(false)
+    setCurrentEditingResponse(null)
+    setEditedResponseText("")
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-orange-50 py-12 px-6">
       <div className="max-w-5xl mx-auto">
@@ -196,6 +264,15 @@ export default function RespostasSugeridas() {
                       <Button
                         variant="outline"
                         size="sm"
+                        className="flex items-center gap-1 text-blue-600 border-blue-600 hover:bg-blue-100 bg-transparent"
+                        onClick={() => handleEditClick(resposta)}
+                      >
+                        <Edit3 className="w-4 h-4" />
+                        Editar
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
                         className="flex items-center gap-1 text-red-600 border-red-600 hover:bg-red-100 bg-transparent"
                         onClick={() => excluirResposta(resposta.id)}
                       >
@@ -211,7 +288,7 @@ export default function RespostasSugeridas() {
         )}
       </div>
 
-      {/* Modal de Encaminhamento de Email */}
+      {/* Modal de Encaminhamento de Email (existente) */}
       <Dialog open={isForwardModalOpen} onOpenChange={setIsForwardModalOpen}>
         <DialogContent className="sm:max-w-[425px] bg-white p-6 rounded-lg shadow-lg">
           <DialogHeader>
@@ -288,6 +365,70 @@ export default function RespostasSugeridas() {
                 <>
                   <Send className="mr-2 h-4 w-4" />
                   Enviar E-mail
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Novo Modal de Edição de Resposta */}
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent className="sm:max-w-[600px] bg-white p-6 rounded-lg shadow-lg">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-gray-900">Editar Resposta Sugerida</DialogTitle>
+            <DialogDescription className="text-gray-600">
+              Edite o conteúdo da resposta sugerida e salve as alterações.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            {editError && (
+              <Alert variant="destructive" className="border-red-200 bg-red-50">
+                <AlertDescription className="text-red-800">{editError}</AlertDescription>
+              </Alert>
+            )}
+            {editSuccess && (
+              <Alert className="border-green-200 bg-green-50">
+                <AlertDescription className="text-green-800">{editSuccess}</AlertDescription>
+              </Alert>
+            )}
+            <div className="space-y-2">
+              <Label htmlFor="edit-response-textarea" className="text-sm font-medium text-gray-800">
+                Conteúdo da Resposta:
+              </Label>
+              <Textarea
+                id="edit-response-textarea"
+                value={editedResponseText}
+                onChange={(e) => setEditedResponseText(e.target.value)}
+                className="min-h-[200px] border-gray-300 focus:ring-orange-500 focus:border-orange-500 text-gray-900"
+                placeholder="Edite a resposta aqui..."
+              />
+            </div>
+          </div>
+          <DialogFooter className="flex flex-col sm:flex-row sm:justify-end gap-2 pt-4">
+            <Button
+              variant="outline"
+              onClick={handleCancelEdit}
+              className="border-gray-300 text-gray-700 hover:bg-gray-100 bg-transparent"
+              disabled={isSavingEdit}
+            >
+              <X className="mr-2 h-4 w-4" />
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleSaveEditedResponse}
+              className="bg-orange-600 hover:bg-orange-700 text-white"
+              disabled={isSavingEdit}
+            >
+              {isSavingEdit ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Salvando...
+                </>
+              ) : (
+                <>
+                  <Save className="mr-2 h-4 w-4" />
+                  Salvar Alterações
                 </>
               )}
             </Button>

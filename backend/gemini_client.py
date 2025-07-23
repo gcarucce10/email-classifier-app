@@ -1,5 +1,9 @@
 import os
 from google import genai
+from dotenv import load_dotenv
+
+# Carrega as variáveis de ambiente do arquivo .env
+load_dotenv()
 
 # Inicializa o client Gemini usando a chave de API do ambiente
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))

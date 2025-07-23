@@ -22,6 +22,9 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(512), nullable=False)
     smtp_password = db.Column(db.String(1024), nullable=False)
+    reset_token = db.Column(db.String(100), nullable=True)
+    reset_token_expiration = db.Column(db.DateTime, nullable=True)
+
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

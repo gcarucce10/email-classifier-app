@@ -9,10 +9,16 @@ from models import EmailRecord
 from models import User  
 from database import db
 from werkzeug.security import generate_password_hash
+from datetime import datetime, timedelta
 import os
 import smtplib
+import secrets
+from dotenv import load_dotenv
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+
+# Carrega variáveis de ambiente do .env
+load_dotenv()
 
 # Cria a aplicação Flask
 app = Flask(__name__)
@@ -292,6 +298,96 @@ def send_email():
         print(f"Erro ao enviar e-mail: {str(e)}")
         return jsonify({"error": "Erro ao enviar e-mail"}), 500
 
+@app.route("/api/recuperar", methods=["POST"])
+def recuperar_senha():
+    '''Endpoint para recuperar a senha do usuário. Gera um token e envia link via email.'''
+    data = request.get_json()
+    email = data.get("email")
+
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({"error": "Email não encontrado"}), 404
+
+    # Gera token e define validade
+    token = secrets.token_urlsafe(32)
+    user.reset_token = token
+    user.reset_token_expiration = datetime.utcnow() + timedelta(hours=1)
+    db.session.commit()
+
+    # Link de recuperação
+    link = f"http://localhost:3000/resetar-senha?token={token}"
+
+    # Dados do remetente fixo
+    smtp_sender_email = os.getenv("SMTP_SENDER_EMAIL") 
+    smtp_sender_password = os.getenv("SMTP_SENDER_PASSWORD")
+    smtp_server = "smtp.gmail.com"
+    smtp_port = 587
+
+    try:
+        msg = MIMEMultipart()
+        msg["From"] = smtp_sender_email
+        msg["To"] = email
+        msg["Subject"] = "Recuperação de Senha - Classificador de Emails"
+        msg.attach(MIMEText(
+            f"Olá,\n\nClique no link abaixo para redefinir sua senha:\n\n{link}\n\n"
+            "Esse link expira em 1 hora.\n\nEquipe AutoU.", "plain"))
+
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()
+        server.login(smtp_sender_email, smtp_sender_password)
+        server.sendmail(smtp_sender_email, email, msg.as_string())
+        server.quit()
+
+        return jsonify({"message": "Email de recuperação enviado com sucesso!"}), 200
+
+    except Exception as e:
+        return jsonify({"error": f"Erro ao enviar o email: {str(e)}"}), 500
+
+@app.route("/api/resetar-senha", methods=["POST"])
+def resetar_senha():
+    '''Endpoint para inserir a nova senha e cadastrar no banco de dados.'''
+    data = request.get_json()
+    token = data.get("token")
+    nova_senha = data.get("nova_senha")
+    confirmar_nova_senha = data.get("confirmar_nova_senha") 
+
+    if not nova_senha or not confirmar_nova_senha: 
+        return jsonify({"error": "Nova senha e confirmação são obrigatórias"}), 400 
+
+    if nova_senha != confirmar_nova_senha: 
+        return jsonify({"error": "As senhas não coincidem"}), 400 
+    
+    user = User.query.filter_by(reset_token=token).first()
+    if not user or user.reset_token_expiration < datetime.utcnow():
+        return jsonify({"error": "Token inválido ou expirado"}), 400
+
+    user.password_hash = generate_password_hash(nova_senha)
+    user.reset_token = None
+    user.reset_token_expiration = None
+    db.session.commit()
+
+    # Retorna o email do usuário na resposta de sucesso
+    return jsonify({"message": "Senha atualizada com sucesso!", "email": user.email}), 200
+
+@app.route("/api/respostas/<int:id>/editar", methods=["PUT"])
+def editar_resposta(id):
+    """Endpoint para editar uma resposta sugerida na página de respostas."""
+    data = request.get_json()
+    nova_resposta = data.get("nova_resposta")
+
+    if not nova_resposta:
+        return jsonify({"error": "A nova resposta não foi fornecida."}), 400
+
+    email_record = EmailRecord.query.get(id)
+
+    if not email_record:
+        return jsonify({"error": "Resposta sugerida não encontrada."}), 404
+
+    email_record.suggested_response = nova_resposta
+    db.session.commit()
+
+    return jsonify({"message": "Resposta atualizada com sucesso!"}), 200
+    
 # CONFIGURAÇÃO PARA PRODUÇÃO NO RENDER
 if __name__ == "__main__":
     # Pega a porta do ambiente (Render define automaticamente)

@@ -1,0 +1,21 @@
+[nltk_data] Downloading package punkt to /home/useradd/nltk_data...
+[nltk_data]   Package punkt is already up-to-date!
+[nltk_data] Downloading package punkt_tab to
+[nltk_data]     /home/useradd/nltk_data...
+[nltk_data]   Package punkt_tab is already up-to-date!
+[nltk_data] Downloading package stopwords to
+[nltk_data]     /home/useradd/nltk_data...
+[nltk_data]   Package stopwords is already up-to-date!
+[nltk_data] Downloading package rslp to /home/useradd/nltk_data...
+[nltk_data]   Package rslp is already up-to-date!
+ * Serving Flask app 'backend.app:app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [23/Jul/2025 15:53:27] "OPTIONS /api/login HTTP/1.1" 200 -
+127.0.0.1 - - [23/Jul/2025 15:53:27] "OPTIONS /api/login HTTP/1.1" 200 -
+127.0.0.1 - - [23/Jul/2025 15:53:29] "POST /api/login HTTP/1.1" 200 -
+127.0.0.1 - - [23/Jul/2025 15:53:29] "POST /api/login HTTP/1.1" 200 -
+127.0.0.1 - - [23/Jul/2025 15:53:40] "GET /api/respostas HTTP/1.1" 200 -
+127.0.0.1 - - [23/Jul/2025 15:53:40] "GET /api/respostas HTTP/1.1" 200 -
