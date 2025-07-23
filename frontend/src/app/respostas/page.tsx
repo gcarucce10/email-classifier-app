@@ -170,7 +170,7 @@ export default function RespostasSugeridas() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ nova_resposta: editedResponseText }), // <-- Alterado aqui
+        body: JSON.stringify({ nova_resposta: editedResponseText }), 
       })
 
       if (!res.ok) {
