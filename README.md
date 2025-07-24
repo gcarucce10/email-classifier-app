@@ -1,7 +1,7 @@
 # Aplicação de Classificação e Resposta Automática de E-mails
 
 ## 📋 Descrição Geral
-Aplicação web full stack para automatizar a leitura, classificação e sugestão de respostas para e-mails das categorias **Produtivo** e **Improdutivo**. Utiliza NLP, Google Gemini, Flask (backend) e Next.js/React (frontend). Testes automatizados e exemplos reais de emails incluídos.
+Aplicação web full stack para automatizar a leitura, classificação e sugestão de respostas para e-mails das categorias **Produtivo** e **Improdutivo**. Utiliza NLP, Google Gemini, Flask (backend) e Next.js/React (frontend). Testes com exemplos reais de emails incluídos.
 
 ---
 
@@ -60,7 +60,8 @@ Backend Flask recebe, pré-processa e classifica emails, sugerindo respostas aut
    ./start.sh
    ```
    Acesse localmente: http://localhost:3000
-   Ou acesse produção: [https://email-classifier-frontend.onrender.com/](https://email-classifier-frontend.onrender.com/)
+   
+   Ou pelo link: [https://email-classifier-frontend.onrender.com/](https://email-classifier-frontend.onrender.com/) (Ainda não disponível)
 
 > Node.js é necessário para o frontend funcionar.
 
