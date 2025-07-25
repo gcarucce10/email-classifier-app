@@ -24,7 +24,15 @@ load_dotenv()
 app = Flask(__name__)
 
 # Setup do banco de dados PostgreSQL
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://useradd:mypass1234@localhost/db')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+  'pool_size': 10,
+  'max_overflow': 5,
+  'pool_timeout': 30,
+  'pool_recycle': 3600,
+  'pool_pre_ping': True
+}
 db.init_app(app)
 migrate = Migrate(app, db)
 

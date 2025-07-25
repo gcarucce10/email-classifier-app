@@ -4,7 +4,20 @@ import type React from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { Upload, Mail, FileText, Loader2, CheckCircle, XCircle, Edit3, Save, X } from "lucide-react"
+import {
+  Upload,
+  Mail,
+  FileText,
+  Loader2,
+  CheckCircle,
+  XCircle,
+  Edit3,
+  Save,
+  X,
+  Menu,
+  LogOut,
+  ListChecks,
+} from "lucide-react" 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
@@ -13,6 +26,7 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet" 
 
 interface ClassificationResult {
   id: number
@@ -203,27 +217,54 @@ export default function EmailClassifier() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-orange-50">
-      {/* Container para os botões de Sair e Respostas Sugeridas */}
-      <div className="absolute top-4 left-4 right-4 flex justify-between z-10">
-        <Button
-          onClick={handleLogout}
-          variant="outline"
-          className="bg-red-500 hover:bg-red-600 text-white border-red-500 px-4 py-2 rounded-md"
-        >
-          Sair
-        </Button>
-        <Link href="/respostas" passHref>
-          <Button
-            variant="outline"
-            className="bg-orange-600 hover:bg-orange-700 text-white border-orange-600 px-4 py-2 rounded-md"
-          >
-            Ir para Respostas Sugeridas
-          </Button>
-        </Link>
+      {/* Sidebar Menu */}
+      <div className="absolute top-4 left-4 z-20">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-10 w-10 rounded-full bg-white shadow-md border-gray-200 hover:bg-gray-50"
+            >
+              <Menu className="h-6 w-6 text-orange-600" />
+              <span className="sr-only">Abrir menu</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-[250px] sm:w-[300px] bg-white p-6 flex flex-col">
+            <SheetHeader className="mb-8">
+              <SheetTitle className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                <Mail className="h-7 w-7 text-orange-600" />
+                Menu
+              </SheetTitle>
+            </SheetHeader>
+            <nav className="flex flex-col gap-4 flex-grow">
+              <Link href="/respostas" passHref>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start text-lg text-gray-700 hover:bg-orange-100 hover:text-orange-700"
+                >
+                  <ListChecks className="mr-3 h-5 w-5" />
+                  Respostas Sugeridas
+                </Button>
+              </Link>
+              <Button
+                onClick={handleLogout}
+                variant="ghost"
+                className="w-full justify-start text-lg text-gray-700 hover:bg-red-100 hover:text-red-700"
+              >
+                <LogOut className="mr-3 h-5 w-5" />
+                Sair
+              </Button>
+            </nav>
+          </SheetContent>
+        </Sheet>
       </div>
+
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 pt-12">
+          {" "}
+          {/* Adicionado pt-12 para compensar o botão do menu */}
           <div className="flex items-center justify-center mb-4">
             <div className="bg-orange-600 p-3 rounded-full">
               <Mail className="h-8 w-8 text-white" />
@@ -500,15 +541,7 @@ export default function EmailClassifier() {
                 >
                   Novo Email
                 </Button>
-                <Link href="/respostas">
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="min-w-[150px] border-orange-600 text-orange-600 hover:bg-orange-100 bg-transparent"
-                  >
-                    Ver Respostas
-                  </Button>
-                </Link>
+                {/* O botão "Ver Respostas" no menu lateral */}
               </div>
             </div>
           )}
