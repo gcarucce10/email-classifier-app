@@ -16,6 +16,9 @@ import secrets
 from dotenv import load_dotenv
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from bs4 import BeautifulSoup
+import imaplib
+import email
 
 # Carrega variáveis de ambiente do .env
 load_dotenv()
@@ -252,6 +255,18 @@ def deletar_resposta(id):
         print(f"Erro ao deletar resposta: {str(e)}")
         return jsonify({"error": "Erro interno ao deletar resposta"}), 500
 
+@app.route("/api/respostas", methods=["DELETE"])
+def deletar_respostas():
+    '''Endpoint para deletar todas as respostas sugeridas.'''
+    try:
+        EmailRecord.query.delete()
+        db.session.commit()
+        return jsonify({"message": "Todas as respostas deletadas com sucesso"}), 200
+
+    except Exception as e:
+        print(f"Erro ao deletar respostas: {str(e)}")
+        return jsonify({"error": "Erro interno ao deletar respostas"}), 500
+
 @app.route("/api/send-email", methods=["POST"])
 def send_email():
     '''Endpoint para enviar um e-mail usando as credenciais SMTP do usuário.'''
@@ -395,6 +410,100 @@ def editar_resposta(id):
     db.session.commit()
 
     return jsonify({"message": "Resposta atualizada com sucesso!"}), 200
+
+@app.route("/api/classificar-inbox", methods=["POST"])
+def classificar_caixa_entrada():
+    """
+    Recebe um número X e classifica os últimos X e-mails reais do usuário logado.
+    """
+    data = request.get_json()
+    quantidade = data.get("quantidade", 5)
+
+    user_id = session.get("user_id")
+    if not user_id:
+        return jsonify({"error": "Usuário não autenticado"}), 401
+
+    user = User.query.get(user_id)
+
+    def extrair_corpo_limpo(msg):
+        corpo = ""
+
+        if msg.is_multipart():
+            for part in msg.walk():
+                content_type = part.get_content_type()
+                content_disposition = str(part.get("Content-Disposition"))
+
+                if "attachment" in content_disposition:
+                    continue
+
+                payload = part.get_payload(decode=True)
+                if payload:
+                    try:
+                        conteudo = payload.decode(errors="ignore")
+                        if content_type == "text/plain":
+                            return conteudo.strip()
+                        elif content_type == "text/html" and not corpo:
+                            corpo = BeautifulSoup(conteudo, "html.parser").get_text(separator="\n", strip=True)
+                    except Exception:
+                        continue
+        else:
+            payload = msg.get_payload(decode=True)
+            if payload:
+                try:
+                    conteudo = payload.decode(errors="ignore")
+                    if msg.get_content_type() == "text/plain":
+                        return conteudo.strip()
+                    elif msg.get_content_type() == "text/html":
+                        corpo = BeautifulSoup(conteudo, "html.parser").get_text(separator="\n", strip=True)
+                except Exception:
+                    pass
+
+        return corpo.strip()
+
+    try:
+        mail = imaplib.IMAP4_SSL("imap.gmail.com")
+        mail.login(user.email, user.smtp_password)
+        mail.select("inbox")
+
+        result, data_ids = mail.search(None, "ALL")
+        ids = data_ids[0].split()[-quantidade:]
+
+        registros = []
+
+        for email_id in ids:
+            result, msg_data = mail.fetch(email_id, "(RFC822)")
+            raw_email = msg_data[0][1]
+            msg = email.message_from_bytes(raw_email)
+
+            corpo = extrair_corpo_limpo(msg)
+            if not corpo:
+                continue
+
+            texto_limpo = preprocess_pt(corpo)
+            categoria = classify_email_gemini(texto_limpo)
+            resposta = generate_reply_gemini(categoria, corpo)
+
+            novo = EmailRecord(
+                email_text=corpo,
+                classification=categoria,
+                suggested_response=resposta
+            )
+            db.session.add(novo)
+            registros.append(novo)
+
+        db.session.commit()
+
+        return jsonify({
+            "message": f"{len(registros)} e-mails classificados com sucesso!",
+            "classificados": [
+                {"id": r.id, "categoria": r.classification, "resposta": r.suggested_response}
+                for r in registros
+            ]
+        })
+
+    except Exception as e:
+        print(f"Erro ao acessar caixa de entrada: {str(e)}")
+        return jsonify({"error": f"Erro ao acessar e-mails: {str(e)}"}), 500
     
 # CONFIGURAÇÃO PARA PRODUÇÃO NO RENDER
 if __name__ == "__main__":

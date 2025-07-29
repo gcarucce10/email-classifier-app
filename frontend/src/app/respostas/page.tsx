@@ -1,6 +1,6 @@
 "use client"
 
-import { Mail, CalendarCheck, Trash2, Send, Edit3, Save, X } from "lucide-react" // Adicionado Edit3, Save, X
+import { Mail, CalendarCheck, Trash2, Send, Edit3, Save, X, Loader2 } from "lucide-react" // Adicionado Loader2
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useEffect, useState } from "react"
@@ -16,8 +16,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Loader2 } from "lucide-react"
-import { Textarea } from "@/components/ui/textarea" // Adicionado Textarea
+import { Textarea } from "@/components/ui/textarea"
 
 interface Resposta {
   id: number
@@ -47,6 +46,11 @@ export default function RespostasSugeridas() {
   const [isSavingEdit, setIsSavingEdit] = useState(false)
   const [editError, setEditError] = useState<string | null>(null)
   const [editSuccess, setEditSuccess] = useState<string | null>(null)
+
+  // Novos estados para exclusão de todas as respostas
+  const [isDeletingAll, setIsDeletingAll] = useState(false)
+  const [deleteAllError, setDeleteAllError] = useState<string | null>(null)
+  const [deleteAllSuccess, setDeleteAllSuccess] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchRespostas = async () => {
@@ -170,7 +174,7 @@ export default function RespostasSugeridas() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ nova_resposta: editedResponseText }), 
+        body: JSON.stringify({ nova_resposta: editedResponseText }),
       })
 
       if (!res.ok) {
@@ -202,6 +206,38 @@ export default function RespostasSugeridas() {
     setEditedResponseText("")
   }
 
+  const handleDeleteAllResponses = async () => {
+    const confirmado = confirm("Tem certeza que deseja EXCLUIR TODAS as respostas sugeridas? Esta ação é irreversível.")
+    if (!confirmado) return
+
+    setIsDeletingAll(true)
+    setDeleteAllError(null)
+    setDeleteAllSuccess(null)
+
+    try {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000"
+      const res = await fetch(`${backendUrl}/api/respostas`, {
+        method: "DELETE",
+      })
+
+      if (!res.ok) {
+        const errorData = await res.json()
+        throw new Error(errorData.error || "Erro ao excluir todas as respostas.")
+      }
+
+      setRespostas([]) // Limpa todas as respostas no frontend
+      setDeleteAllSuccess("Todas as respostas foram excluídas com sucesso!")
+      setTimeout(() => {
+        setDeleteAllSuccess(null)
+      }, 2000)
+    } catch (err: any) {
+      console.error("Erro ao excluir todas as respostas:", err)
+      setDeleteAllError(err.message || "Erro ao excluir todas as respostas. Tente novamente.")
+    } finally {
+      setIsDeletingAll(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-orange-50 py-12 px-6">
       <div className="max-w-5xl mx-auto">
@@ -214,6 +250,40 @@ export default function RespostasSugeridas() {
           <h1 className="text-4xl font-bold text-gray-900">Respostas Sugeridas</h1>
           <p className="text-gray-600 mt-2">Veja o histórico de respostas automáticas geradas</p>
         </div>
+
+        {/* Botão Excluir Todas as Respostas */}
+        <div className="flex justify-end max-w-5xl mx-auto mb-6">
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-1 text-red-600 border-red-600 hover:bg-red-100 bg-transparent"
+            onClick={handleDeleteAllResponses}
+            disabled={loading || isDeletingAll || respostas.length === 0} // Desabilita se estiver carregando, excluindo ou não houver respostas
+          >
+            {isDeletingAll ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Excluindo...
+              </>
+            ) : (
+              <>
+                <Trash2 className="w-4 h-4" />
+                Excluir Todas
+              </>
+            )}
+          </Button>
+        </div>
+
+        {deleteAllError && (
+          <Alert variant="destructive" className="mt-4 border-red-200 bg-red-50 max-w-5xl mx-auto mb-6">
+            <AlertDescription className="text-red-800">{deleteAllError}</AlertDescription>
+          </Alert>
+        )}
+        {deleteAllSuccess && (
+          <Alert className="mt-4 border-green-200 bg-green-50 max-w-5xl mx-auto mb-6">
+            <AlertDescription className="text-green-800">{deleteAllSuccess}</AlertDescription>
+          </Alert>
+        )}
 
         {loading ? (
           <p className="text-center text-orange-600">Carregando respostas...</p>

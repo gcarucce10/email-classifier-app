@@ -1,3 +1,5 @@
 venv/
 render.yaml
 .env
+backend.log
+frontend.log

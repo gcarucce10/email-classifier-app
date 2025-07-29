@@ -17,7 +17,8 @@ import {
   Menu,
   LogOut,
   ListChecks,
-} from "lucide-react" 
+  Inbox,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
@@ -26,7 +27,15 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet" 
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog" // Importado Dialog components
 
 interface ClassificationResult {
   id: number
@@ -47,6 +56,13 @@ export default function EmailClassifier() {
   // Estados para edição da resposta
   const [isEditingResponse, setIsEditingResponse] = useState(false)
   const [editedResponse, setEditedResponse] = useState("")
+
+  // Novos estados para classificação automática
+  const [isAutoClassifyModalOpen, setIsAutoClassifyModalOpen] = useState(false)
+  const [numEmailsToClassify, setNumEmailsToClassify] = useState(5) // Padrão para 5 e-mails
+  const [isAutoClassifying, setIsAutoClassifying] = useState(false)
+  const [autoClassifyError, setAutoClassifyError] = useState<string | null>(null)
+  const [autoClassifySuccess, setAutoClassifySuccess] = useState<string | null>(null)
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -215,6 +231,48 @@ export default function EmailClassifier() {
     }
   }
 
+  const handleAutomaticClassification = async () => {
+    setAutoClassifyError(null)
+    setAutoClassifySuccess(null)
+    if (numEmailsToClassify < 1 || numEmailsToClassify > 50) {
+      setAutoClassifyError("Por favor, insira um número entre 1 e 50.")
+      return
+    }
+
+    setIsAutoClassifying(true)
+    try {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000"
+      const response = await fetch(`${backendUrl}/api/classificar-inbox`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ quantidade: numEmailsToClassify }),
+        credentials: "include", // Importante para enviar o cookie de sessão
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || "Erro ao classificar e-mails automaticamente.")
+      }
+
+      setAutoClassifySuccess(data.message || `${data.classificados.length} e-mails classificados com sucesso!`)
+      setTimeout(() => {
+        setIsAutoClassifyModalOpen(false)
+        setNumEmailsToClassify(5) // Reset para o valor padrão
+        setAutoClassifySuccess(null)
+        // Opcional: redirecionar para a página de respostas ou mostrar um toast
+        // router.push("/respostas");
+      }, 2000)
+    } catch (err: any) {
+      console.error("Erro ao classificar e-mails automaticamente:", err)
+      setAutoClassifyError(err.message || "Erro de conexão ao classificar e-mails. Tente novamente.")
+    } finally {
+      setIsAutoClassifying(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-orange-50">
       {/* Sidebar Menu */}
@@ -230,7 +288,7 @@ export default function EmailClassifier() {
               <span className="sr-only">Abrir menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-[250px] sm:w-[300px] bg-white p-6 flex flex-col">
+          <SheetContent side="left" className="w-[300px] sm:w-[350px] bg-white p-6 flex flex-col">
             <SheetHeader className="mb-8">
               <SheetTitle className="text-2xl font-bold text-gray-900 flex items-center gap-2">
                 <Mail className="h-7 w-7 text-orange-600" />
@@ -247,6 +305,14 @@ export default function EmailClassifier() {
                   Respostas Sugeridas
                 </Button>
               </Link>
+              <Button
+                onClick={() => setIsAutoClassifyModalOpen(true)}
+                variant="ghost"
+                className="w-full justify-start text-lg text-gray-700 hover:bg-blue-100 hover:text-blue-700"
+              >
+                <Inbox className="mr-3 h-6 w-6" />
+                Classificação Automática
+              </Button>
               <Button
                 onClick={handleLogout}
                 variant="ghost"
@@ -552,6 +618,71 @@ export default function EmailClassifier() {
           <p>Classificador de Emails - Automatizando a gestão de comunicações</p>
         </div>
       </div>
+
+      {/* Modal de Classificação Automática */}
+      <Dialog open={isAutoClassifyModalOpen} onOpenChange={setIsAutoClassifyModalOpen}>
+        <DialogContent className="sm:max-w-[425px] bg-white p-6 rounded-lg shadow-lg">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-gray-900">Classificação Automática</DialogTitle>
+            <DialogDescription className="text-gray-600">
+              Quantos dos seus últimos e-mails você gostaria de classificar? (Máx. 50)
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            {autoClassifyError && (
+              <Alert variant="destructive" className="border-red-200 bg-red-50">
+                <AlertDescription className="text-red-800">{autoClassifyError}</AlertDescription>
+              </Alert>
+            )}
+            {autoClassifySuccess && (
+              <Alert className="border-green-200 bg-green-50">
+                <AlertDescription className="text-green-800">{autoClassifySuccess}</AlertDescription>
+              </Alert>
+            )}
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="num-emails" className="text-right text-gray-800">
+                Quantidade:
+              </Label>
+              <Input
+                id="num-emails"
+                type="number"
+                min="1"
+                max="50"
+                value={numEmailsToClassify}
+                onChange={(e) => setNumEmailsToClassify(Number.parseInt(e.target.value) || 0)}
+                className="col-span-3 border-gray-300 focus:ring-orange-500 focus:border-orange-500"
+              />
+            </div>
+          </div>
+          <DialogFooter className="flex flex-col sm:flex-row sm:justify-end gap-2 pt-4">
+            <Button
+              variant="outline"
+              onClick={() => setIsAutoClassifyModalOpen(false)}
+              className="border-gray-300 text-gray-700 hover:bg-gray-100"
+              disabled={isAutoClassifying}
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleAutomaticClassification}
+              className="bg-orange-600 hover:bg-orange-700 text-white"
+              disabled={isAutoClassifying}
+            >
+              {isAutoClassifying ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Classificando...
+                </>
+              ) : (
+                <>
+                  <Inbox className="mr-2 h-4 w-4" />
+                  Classificar
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

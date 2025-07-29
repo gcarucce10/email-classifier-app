@@ -7,23 +7,25 @@
    - Network:      http://10.255.255.254:3000
 
  ✓ Starting...
- ✓ Ready in 3s
+ ✓ Ready in 8.4s
  ○ Compiling / ...
- ✓ Compiled / in 11.3s
- GET / 307 in 13290ms
- GET / 307 in 396ms
+ GET / 307 in 25421ms
+ ✓ Compiled / in 25.5s
+ GET /respostas 200 in 25764ms
+ ○ Compiling /favicon.ico ...
+ ✓ Compiled /favicon.ico in 2.4s
+ GET / 307 in 395ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 2958ms
  ○ Compiling /login ...
- ✓ Compiled /login in 3.4s
- GET /login 200 in 3519ms
+ ✓ Compiled /login in 2.6s
+ GET /login 200 in 2793ms
  ○ Compiling /classificacao ...
- ✓ Compiled /classificacao in 2.8s
- GET /classificacao 200 in 2899ms
- ○ Compiling /respostas ...
- ✓ Compiled /respostas in 1974ms
- GET /respostas 200 in 2042ms
- GET /login 200 in 512ms
- ○ Compiling /registrar ...
- ✓ Compiled /registrar in 5.2s
- GET /registrar 200 in 5341ms
- ✓ Compiled in 7s
+ ✓ Compiled /classificacao in 4.2s
+ GET /classificacao 200 in 4237ms
+ GET /respostas 200 in 94ms
+ GET /respostas 200 in 125ms
+ GET /classificacao 200 in 298ms
+ GET /respostas 200 in 114ms
+ ✓ Compiled in 12.9s
+ GET /login 200 in 3937ms
 [?25h
