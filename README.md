@@ -34,7 +34,7 @@ Backend Flask recebe, pré-processa e classifica emails, sugerindo respostas aut
 ---
 
 ## Tecnologias
-- **Backend:** Python, Flask, pdfminer.six, NLTK, spaCy
+- **Backend:** Python, Flask, pdfminer.six, NLTK, spaCy, PostgreSQL
 - **IA/ML:** Google Gemini API (gemini-1.5-flash)
 - **Frontend:** React, Next.js, TailwindCSS
 - **Testes:** Casos reais em `casos_de_teste/`
