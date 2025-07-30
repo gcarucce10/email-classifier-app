@@ -116,7 +116,7 @@ start.sh               # Script de inicialização
   - O processo é seguro e segue boas práticas de autenticação.
 
 - **Classificação Automática da Caixa de Entrada:**
-  - A aplicação pode acessar a caixa de entrada do usuário, classificando automaticamente os emails recebidos.
+  - A aplicação pode acessar a caixa de entrada do usuário, classificando automaticamente os emails recebidos. Dispensando o trabalho manual de colar o texto ou anexar arquivos.
 
 Essas funcionalidades tornam o sistema completo para uso corporativo, integrando automação, gestão de respostas, comunicação, segurança e controle de dados em uma única plataforma.
 
