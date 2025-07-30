@@ -623,7 +623,7 @@ export default function EmailClassifier() {
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-gray-900">Classificação Automática</DialogTitle>
             <DialogDescription className="text-gray-600">
-              Quantos dos seus últimos e-mails você gostaria de classificar? (Máx. 50)
+              Quantos dos seus últimos e-mails você gostaria de classificar? (Máx. 10)
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
@@ -645,7 +645,7 @@ export default function EmailClassifier() {
                 id="num-emails"
                 type="number"
                 min="1"
-                max="50"
+                max="10"
                 value={numEmailsToClassify}
                 onChange={(e) => setNumEmailsToClassify(Number.parseInt(e.target.value) || 0)}
                 className="col-span-3 border-gray-300 focus:ring-blue-400 focus:border-blue-400"
