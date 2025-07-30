@@ -34,7 +34,8 @@ Backend Flask recebe, pré-processa e classifica emails, sugerindo respostas aut
 ---
 
 ## Tecnologias
-- **Backend:** Python, Flask, pdfminer.six, NLTK, spaCy, PostgreSQL
+- **Backend:** Flask (Servidor Python), pdfminer.six, NLTK, spaCy
+- **Banco de Dados:** PostgreSQL (Persistência de dados), Flask-SQLAlchemy (Flask-Migrate para migrações)
 - **IA/ML:** Google Gemini API (gemini-1.5-flash)
 - **Frontend:** React, Next.js, TailwindCSS
 - **Testes:** Casos reais em `casos_de_teste/`
@@ -91,33 +92,28 @@ start.sh                # Script de inicialização
 
 ## Funcionalidades Adicionais
 
-- **Login e Registro de Usuários:**
-  - A aplicação conta com páginas dedicadas para autenticação, permitindo que usuários se registrem e façam login de forma segura.
-  - O acesso às funcionalidades principais pode ser restrito a usuários autenticados, garantindo privacidade e controle de uso.
-
-- **Página de Respostas:**
-  - Após a classificação, o usuário pode visualizar a resposta sugerida, editar o texto conforme necessário e copiar para uso externo.
-  - O histórico de respostas pode ser exibido, facilitando o acompanhamento das interações realizadas.
-
-- **Envio de Emails Integrado:**
-  - Na página de Respostas, a aplicação permite o envio direto de emails a partir da interface, utilizando a resposta gerada ou personalizada pelo usuário.
-  - O envio pode ser feito para destinatários informados, integrando o fluxo de classificação e resposta ao processo real de comunicação.
-
-- **Persistência de Dados:**
-  - Todas as informações relevantes (emails enviados, classificações, respostas, histórico de interações) podem ser armazenadas em banco de dados, garantindo rastreabilidade e consulta futura.
-  - A persistência permite relatórios, auditoria e integração com outros sistemas corporativos.
-  - Persistências também dos dados do usuário.
+- **Login:**
+  - A aplicação conta com uma página primária dedicada para autenticação, permitindo que o usuário faça login de forma segura.
+  - O acesso às funcionalidades principais é restrito a usuários autenticados, garantindo privacidade e controle de uso.
 
 - **Registro de Usuário:**
-  - Usuários podem se cadastrar na plataforma, criando contas próprias para acesso personalizado.
-  - O registro pode incluir nome, email e senha e senha de app Gmail.
+  - Usuários devem se cadastrar na plataforma para ter acesso aos serviços.
+  - O registro inclui nome, email e senha e senha de app Gmail.
 
 - **Recuperação de Senha (Esqueci a Senha):**
   - A aplicação oferece funcionalidade de recuperação de senha, permitindo que o usuário solicite redefinição por email caso esqueça sua senha.
   - O processo é seguro e segue boas práticas de autenticação.
 
+- **Página de Respostas:**
+  - Após a classificação, o usuário pode visualizar a resposta sugerida, editar o texto conforme necessário e copiar para uso externo.
+  - O histórico de respostas é exibido, facilitando o acompanhamento das interações realizadas.
+
+- **Envio de Emails Integrado:**
+  - Na página de Respostas, a aplicação permite o envio direto de emails a partir da interface, utilizando a resposta gerada ou personalizada pelo usuário.
+  - O envio pode ser feito para destinatários informados, integrando o fluxo de classificação e resposta ao processo real de comunicação.
+
 - **Classificação Automática da Caixa de Entrada:**
-  - A aplicação pode acessar a caixa de entrada do usuário, classificando automaticamente os emails recebidos. Dispensando o trabalho manual de colar o texto ou anexar arquivos.
+  - A aplicação pode acessar a caixa de entrada do usuário (inbox do endereço de email cadastrado), classificando automaticamente os emails recebidos. Dispensando o trabalho manual de colar o texto ou anexar arquivos.
 
 Essas funcionalidades tornam o sistema completo para uso corporativo, integrando automação, gestão de respostas, comunicação, segurança e controle de dados em uma única plataforma.
 
