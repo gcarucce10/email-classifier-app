@@ -9,6 +9,7 @@ import { UserPlus } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
 export default function Registrar() {
+  const [nome, setNome] = useState("")
   const [email, setEmail] = useState("")
   const [senha, setSenha] = useState("")
   const [erro, setErro] = useState<string | null>(null)
@@ -20,7 +21,7 @@ export default function Registrar() {
     setErro(null)
     setSucesso(null)
 
-    if (!email || !senha) {
+    if (!nome || !email || !senha || !smtpPassword) {
       setErro("Por favor, preencha todos os campos.")
       return
     }
@@ -32,7 +33,7 @@ export default function Registrar() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, senha, smtp_password: smtpPassword }),
+        body: JSON.stringify({ nome, email, senha, smtp_password: smtpPassword }),
       })
 
       const data = await response.json()
@@ -70,6 +71,13 @@ export default function Registrar() {
               <AlertDescription className="text-green-800">{sucesso}</AlertDescription>
             </Alert>
           )}
+          <Input
+            type="text"
+            placeholder="Seu nome"
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+            className="h-12 px-4 text-lg border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+          />
           <Input
             type="email"
             placeholder="Seu e-mail"
