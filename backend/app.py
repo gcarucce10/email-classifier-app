@@ -42,7 +42,7 @@ migrate = Migrate(app, db)
 # Configurar CORS para produção
 CORS(app, origins=[
     "http://localhost:3000",  # Desenvolvimento local
-    "https://email-classifier-backend-9s0r.onrender.com", # URL do backend no Render
+    "https://email-classifier-backend-9s0r.onrender.com", # URL do backend em Produção (Não implemetado ainda)
     "*"  
 ], supports_credentials=True)
 
@@ -525,7 +525,7 @@ def classificar_caixa_entrada():
         print(f"Erro ao acessar caixa de entrada: {str(e)}")
         return jsonify({"error": f"Erro ao acessar e-mails: {str(e)}"}), 500
     
-# CONFIGURAÇÃO PARA PRODUÇÃO NO RENDER
+# CONFIGURAÇÃO PARA PRODUÇÃO (NÃO IMPLEMENTADO AINDA)
 if __name__ == "__main__":
     # Pega a porta do ambiente (Render define automaticamente)
     port = int(os.environ.get('PORT', 5000))
