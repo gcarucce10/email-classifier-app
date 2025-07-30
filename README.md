@@ -81,7 +81,7 @@ frontend/
 casos_de_teste/         # Casos de teste (arquivos) 
   improdutivo.pdf       # Exemplo de email improdutivo em .pdf
   ...                   # Outros casos de teste
-requirements.txt      # Requisitos Python
+requirements.txt       # Requisitos Python
 README.md
 start.sh               # Script de inicialização
 ```
