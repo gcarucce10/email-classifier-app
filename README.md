@@ -77,7 +77,7 @@ backend/
   preprocess.py         # Pré-processamento de texto
   models.py             # Modelos de entidades no banco de dados
   templates/            # Templates HTML (Flask) (teste de backend)
-  requirements.txt       # Requisitos Python
+  requirements.txt      # Requisitos Python
 frontend/
   src/app/page.tsx      # Página principal Next.js/React
   ...                   # Outros arquivos (telas) do frontend
@@ -85,7 +85,7 @@ casos_de_teste/         # Casos de teste (arquivos)
   improdutivo.pdf       # Exemplo de email improdutivo em .pdf
   ...                   # Outros casos de teste
 README.md
-start.sh               # Script de inicialização
+start.sh                # Script de inicialização
 ```
 ---
 
