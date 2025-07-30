@@ -35,7 +35,7 @@ Backend Flask recebe, pré-processa e classifica emails, sugerindo respostas aut
 
 ## Tecnologias
 - **Backend:** Python, Flask, pdfminer.six, NLTK, spaCy
-- **IA/ML:** Google Gemini API
+- **IA/ML:** Google Gemini API (gemini-1.5-flash)
 - **Frontend:** React, Next.js, TailwindCSS
 - **Testes:** Casos reais em `casos_de_teste/`
 
@@ -76,17 +76,16 @@ backend/
   preprocess.py         # Pré-processamento de texto
   models.py             # Modelos de entidades no banco de dados
   templates/            # Templates HTML (Flask) (teste de backend)
+  requirements.txt       # Requisitos Python
 frontend/
   src/app/page.tsx      # Página principal Next.js/React
   ...                   # Outros arquivos (telas) do frontend
 casos_de_teste/         # Casos de teste (arquivos) 
   improdutivo.pdf       # Exemplo de email improdutivo em .pdf
   ...                   # Outros casos de teste
-requirements.txt       # Requisitos Python
 README.md
 start.sh               # Script de inicialização
 ```
-
 ---
 
 ## Funcionalidades Adicionais
