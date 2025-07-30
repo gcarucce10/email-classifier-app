@@ -65,6 +65,7 @@ Backend Flask recebe, pré-processa e classifica emails, sugerindo respostas aut
 
 > Node.js é necessário para o frontend funcionar.
 
+Observação: Variáveis de ambiente devem ser configuradas para a API do Google Gemini e outras credenciais necessárias (ex.: Email que tratará recuperação de senhas e banco de dados). Numa futura atualização, será realizado deploy da aplicação e essa sessão poderá ser desconsiderada.
 ---
 
 ## Estrutura do Projeto
