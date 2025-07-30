@@ -3,3 +3,5 @@ render.yaml
 .env
 backend.log
 frontend.log
+cookie.txt
+cookies.txt

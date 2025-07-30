@@ -59,7 +59,7 @@ Saída esperada: "Classificação: [Produtivo/Improdutivo]"""
     # Retorna apenas a última linha da resposta, que deve conter a classificação
     return resp.text.strip().splitlines()[-1]
 
-def generate_reply_gemini(categoria: str, texto_original: str) -> str:
+def generate_reply_gemini(categoria: str, texto_original: str, remetente: str) -> str:
     """
     Gera uma resposta automática para o email, adaptando o tom e o formato conforme a categoria.
     - Para emails produtivos: resposta formal e objetiva.
@@ -82,7 +82,7 @@ def generate_reply_gemini(categoria: str, texto_original: str) -> str:
     (Duas quebras de linha)
 
     Atenciosamente,
-    AutoU.
+    {remetente}.
     """
     else:
         # Prompt para resposta educada e sucinta para emails improdutivos
@@ -97,7 +97,7 @@ def generate_reply_gemini(categoria: str, texto_original: str) -> str:
     - Uma frase de agradecimento ou retribuição do que foi desejado.
 
     Atenciosamente,
-    AutoU.
+    {remetente}.
     """
     # Chama o modelo Gemini para gerar a resposta automática
     resp = client.models.generate_content(

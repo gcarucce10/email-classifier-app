@@ -51,11 +51,11 @@ export default function Registrar() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-orange-50 px-4 py-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50 px-4 py-8">
       <Card className="w-full max-w-md shadow-xl rounded-lg border border-gray-200 bg-white">
         <CardHeader className="text-center space-y-2">
           <div className="flex justify-center">
-            <UserPlus className="h-10 w-10 text-orange-600" />
+            <UserPlus className="h-10 w-10 text-blue-500" />
           </div>
           <CardTitle className="text-3xl font-bold text-gray-900">Criar Conta</CardTitle>
         </CardHeader>
@@ -75,35 +75,35 @@ export default function Registrar() {
             placeholder="Seu e-mail"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="h-12 px-4 text-lg border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+            className="h-12 px-4 text-lg border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
           />
           <Input
             type="password"
             placeholder="Sua senha"
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
-            className="h-12 px-4 text-lg border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+            className="h-12 px-4 text-lg border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
           />
           <p className="text-xs text-gray-600 mt-1">
             Gere sua senha de aplicativo do Gmail em{" "}
             <a
-            href="https://myaccount.google.com/apppasswords"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 underline"
-          >
-            myaccount.google.com/apppasswords
-          </a>
-        </p>
-        <Input
+              href="https://myaccount.google.com/apppasswords"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 underline"
+            >
+              myaccount.google.com/apppasswords
+            </a>
+          </p>
+          <Input
             type="password"
             placeholder="Sua senha de aplicativo Gmail"
             value={smtpPassword}
             onChange={(e) => setSmtpPassword(e.target.value)}
-            className="h-12 px-4 text-lg border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+            className="h-12 px-4 text-lg border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
           />
           <Button
-            className="w-full h-12 text-lg bg-orange-600 text-white hover:bg-orange-700 transition-colors"
+            className="w-full h-12 text-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors"
             onClick={handleRegistrar}
           >
             Criar
@@ -111,7 +111,7 @@ export default function Registrar() {
           <Button
             variant="outline"
             onClick={() => router.push("/login")}
-            className="w-full h-12 text-lg border-orange-600 text-orange-600 hover:bg-orange-100 transition-colors"
+            className="w-full h-12 text-lg border-blue-500 text-blue-500 hover:bg-blue-100 transition-colors"
           >
             Já tem uma conta? Entrar
           </Button>

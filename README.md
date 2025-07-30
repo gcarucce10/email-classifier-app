@@ -81,9 +81,8 @@ casos_de_teste/         # Casos de teste para o backend
   improdutivo.pdf       # Exemplo de email improdutivo em .pdf
   ...                   # Outros casos de teste
 README.md
-requirements.txt
+requirements.txt        # Requisitos Python
 start.sh                # Script de inicialização
-render.yaml             # Configuração de deploy Render
 ```
 
 ---

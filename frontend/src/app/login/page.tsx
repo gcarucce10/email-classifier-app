@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react" // Adicionado useEffect
-import { useRouter, useSearchParams } from "next/navigation" // Adicionado useSearchParams
+import { useState, useEffect } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -23,7 +23,7 @@ export default function Login() {
   const [senha, setSenha] = useState("")
   const [erro, setErro] = useState("")
   const router = useRouter()
-  const searchParams = useSearchParams() // <--- Adicionado
+  const searchParams = useSearchParams()
 
   // Novos estados para recuperação de senha
   const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false)
@@ -33,14 +33,13 @@ export default function Login() {
   const [recoveryEmailSuccess, setRecoveryEmailSuccess] = useState<string | null>(null)
 
   useEffect(() => {
-    // <--- Adicionado
     const emailFromUrl = searchParams.get("email")
     if (emailFromUrl) {
       setEmail(emailFromUrl)
       // Opcional: Limpar o parâmetro da URL para evitar que o email seja preenchido em recarregamentos futuros
       // router.replace('/login', undefined, { shallow: true });
     }
-  }, [searchParams]) // <--- Adicionado
+  }, [searchParams])
 
   const handleLogin = async () => {
     setErro("")
@@ -104,11 +103,11 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-orange-50 px-4 py-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50 px-4 py-8">
       <Card className="w-full max-w-md shadow-xl rounded-lg border border-gray-200 bg-white">
         <CardHeader className="text-center space-y-2">
           <div className="flex justify-center">
-            <LogIn className="h-10 w-10 text-orange-600" />
+            <LogIn className="h-10 w-10 text-blue-500" />
           </div>
           <CardTitle className="text-3xl font-bold text-gray-900">Login</CardTitle>
         </CardHeader>
@@ -123,21 +122,21 @@ export default function Login() {
             placeholder="Seu e-mail"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="h-12 px-4 text-lg border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+            className="h-12 px-4 text-lg border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
           />
           <Input
             type="password"
             placeholder="Sua senha"
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
-            className="h-12 px-4 text-lg border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+            className="h-12 px-4 text-lg border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
           />
           {/* Novo link "Esqueci minha senha" */}
           <div className="text-right">
             <Button
               variant="link"
               onClick={() => setIsForgotPasswordModalOpen(true)}
-              className="text-sm text-orange-600 hover:text-orange-700 p-0 h-auto"
+              className="text-sm text-blue-500 hover:text-blue-600 p-0 h-auto"
             >
               Esqueci minha senha
             </Button>
@@ -146,14 +145,14 @@ export default function Login() {
         <CardFooter className="flex flex-col space-y-4">
           <Button
             onClick={handleLogin}
-            className="w-full h-12 text-lg bg-orange-600 hover:bg-orange-700 text-white transition-colors"
+            className="w-full h-12 text-lg bg-blue-500 hover:bg-blue-600 text-white transition-colors"
           >
             Entrar
           </Button>
           <Button
             variant="outline"
             onClick={() => router.push("/registrar")}
-            className="w-full h-12 text-lg border-orange-600 text-orange-600 hover:bg-orange-100 transition-colors"
+            className="w-full h-12 text-lg border-blue-500 text-blue-500 hover:bg-blue-100 transition-colors"
           >
             Criar Conta
           </Button>
@@ -189,7 +188,7 @@ export default function Login() {
                 type="email"
                 value={recoveryEmail}
                 onChange={(e) => setRecoveryEmail(e.target.value)}
-                className="col-span-3 border-gray-300 focus:ring-orange-500 focus:border-orange-500"
+                className="col-span-3 border-gray-300 focus:ring-blue-400 focus:border-blue-400"
                 placeholder="seu.email@exemplo.com"
               />
             </div>
@@ -205,7 +204,7 @@ export default function Login() {
             </Button>
             <Button
               onClick={handleForgotPassword}
-              className="bg-orange-600 hover:bg-orange-700 text-white"
+              className="bg-blue-500 hover:bg-blue-600 text-white"
               disabled={isSendingRecoveryEmail}
             >
               {isSendingRecoveryEmail ? (

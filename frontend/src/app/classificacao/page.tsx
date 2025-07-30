@@ -35,7 +35,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog" // Importado Dialog components
+} from "@/components/ui/dialog"
 
 interface ClassificationResult {
   id: number
@@ -105,6 +105,7 @@ export default function EmailClassifier() {
       const response = await fetch(`${backendUrl}/api/classify`, {
         method: "POST",
         body: formData,
+        credentials: "include",
       })
 
       if (!response.ok) {
@@ -274,7 +275,7 @@ export default function EmailClassifier() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-orange-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Sidebar Menu */}
       <div className="absolute top-4 left-4 z-20">
         <Sheet>
@@ -284,14 +285,14 @@ export default function EmailClassifier() {
               size="icon"
               className="h-10 w-10 rounded-full bg-white shadow-md border-gray-200 hover:bg-gray-50"
             >
-              <Menu className="h-6 w-6 text-orange-600" />
+              <Menu className="h-6 w-6 text-blue-500" />
               <span className="sr-only">Abrir menu</span>
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="w-[300px] sm:w-[350px] bg-white p-6 flex flex-col">
             <SheetHeader className="mb-8">
               <SheetTitle className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                <Mail className="h-7 w-7 text-orange-600" />
+                <Mail className="h-7 w-7 text-blue-500" />
                 Menu
               </SheetTitle>
             </SheetHeader>
@@ -299,7 +300,7 @@ export default function EmailClassifier() {
               <Link href="/respostas" passHref>
                 <Button
                   variant="ghost"
-                  className="w-full justify-start text-lg text-gray-700 hover:bg-orange-100 hover:text-orange-700"
+                  className="w-full justify-start text-lg text-gray-700 hover:bg-blue-100 hover:text-blue-600"
                 >
                   <ListChecks className="mr-3 h-5 w-5" />
                   Respostas Sugeridas
@@ -308,7 +309,7 @@ export default function EmailClassifier() {
               <Button
                 onClick={() => setIsAutoClassifyModalOpen(true)}
                 variant="ghost"
-                className="w-full justify-start text-lg text-gray-700 hover:bg-blue-100 hover:text-blue-700"
+                className="w-full justify-start text-lg text-gray-700 hover:bg-blue-100 hover:text-blue-600"
               >
                 <Inbox className="mr-3 h-6 w-6" />
                 Classificação Automática
@@ -330,9 +331,8 @@ export default function EmailClassifier() {
         {/* Header */}
         <div className="text-center mb-8 pt-12">
           {" "}
-          {/* Adicionado pt-12 para compensar o botão do menu */}
           <div className="flex items-center justify-center mb-4">
-            <div className="bg-orange-600 p-3 rounded-full">
+            <div className="bg-blue-500 p-3 rounded-full">
               <Mail className="h-8 w-8 text-white" />
             </div>
           </div>
@@ -348,7 +348,7 @@ export default function EmailClassifier() {
             <Card className="shadow-lg border-0 bg-white">
               <CardHeader className="bg-white border-b">
                 <CardTitle className="flex items-center gap-2 text-gray-900">
-                  <FileText className="h-5 w-5 text-orange-600" />
+                  <FileText className="h-5 w-5 text-blue-500" />
                   Processar Email
                 </CardTitle>
                 <CardDescription className="text-gray-600">
@@ -357,17 +357,17 @@ export default function EmailClassifier() {
               </CardHeader>
               <CardContent className="p-6 bg-white">
                 <Tabs defaultValue="text" className="w-full">
-                  <TabsList className="grid w-full grid-cols-2 mb-6 bg-orange-100 border border-orange-200">
+                  <TabsList className="grid w-full grid-cols-2 mb-6 bg-blue-100 border border-blue-100">
                     <TabsTrigger
                       value="text"
-                      className="flex items-center gap-2 text-gray-700 data-[state=active]:bg-orange-600 data-[state=active]:text-white data-[state=active]:shadow-sm hover:bg-orange-200 transition-colors"
+                      className="flex items-center gap-2 text-gray-700 data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-sm hover:bg-blue-100 transition-colors"
                     >
                       <FileText className="h-4 w-4" />
                       Inserir Texto
                     </TabsTrigger>
                     <TabsTrigger
                       value="file"
-                      className="flex items-center gap-2 text-gray-700 data-[state=active]:bg-orange-600 data-[state=active]:text-white data-[state=active]:shadow-sm hover:bg-orange-200 transition-colors"
+                      className="flex items-center gap-2 text-gray-700 data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-sm hover:bg-blue-100 transition-colors"
                     >
                       <Upload className="h-4 w-4" />
                       Upload de Arquivo
@@ -390,7 +390,7 @@ export default function EmailClassifier() {
                     <Button
                       onClick={() => handleSubmit("text")}
                       disabled={isLoading || !emailText.trim()}
-                      className="w-full bg-orange-600 hover:bg-orange-700 text-white"
+                      className="w-full bg-blue-500 hover:bg-blue-600 text-white"
                       size="lg"
                     >
                       {isLoading ? (
@@ -422,13 +422,11 @@ export default function EmailClassifier() {
                         />
                       </div>
                       {selectedFile && (
-                        <div className="mt-2 p-3 bg-orange-50 rounded-lg border border-orange-200">
+                        <div className="mt-2 p-3 bg-blue-50 rounded-lg border border-blue-100">
                           <div className="flex items-center gap-2">
-                            <FileText className="h-4 w-4 text-orange-600" />
-                            <span className="text-sm font-medium text-orange-800">{selectedFile.name}</span>
-                            <span className="text-xs text-orange-600">
-                              ({(selectedFile.size / 1024).toFixed(1)} KB)
-                            </span>
+                            <FileText className="h-4 w-4 text-blue-500" />
+                            <span className="text-sm font-medium text-blue-700">{selectedFile.name}</span>
+                            <span className="text-xs text-blue-600">({(selectedFile.size / 1024).toFixed(1)} KB)</span>
                           </div>
                         </div>
                       )}
@@ -436,7 +434,7 @@ export default function EmailClassifier() {
                     <Button
                       onClick={() => handleSubmit("file")}
                       disabled={isLoading || !selectedFile}
-                      className="w-full bg-orange-600 hover:bg-orange-700 text-white"
+                      className="w-full bg-blue-500 hover:bg-blue-600 text-white"
                       size="lg"
                     >
                       {isLoading ? (
@@ -482,7 +480,7 @@ export default function EmailClassifier() {
                           className={`text-sm px-3 py-1 ${
                             result.category === "Produtivo"
                               ? "bg-green-100 text-green-800 border-green-200"
-                              : "bg-orange-100 text-orange-800 border-orange-200"
+                              : "bg-red-100 text-red-800 border-red-200"
                           }`}
                         >
                           {result.category}
@@ -495,7 +493,7 @@ export default function EmailClassifier() {
                         <div className="flex items-center gap-2">
                           <div className="flex-1 bg-gray-200 rounded-full h-2">
                             <div
-                              className="bg-orange-600 h-2 rounded-full transition-all duration-500"
+                              className="bg-blue-500 h-2 rounded-full transition-all duration-500"
                               style={{ width: `${result.confidence * 100}%` }}
                             />
                           </div>
@@ -513,10 +511,10 @@ export default function EmailClassifier() {
               <Card className="shadow-lg border-0 bg-white">
                 <CardHeader className="bg-white border-b">
                   <CardTitle className="flex items-center gap-2 text-gray-900">
-                    <Mail className="h-5 w-5 text-orange-600" />
+                    <Mail className="h-5 w-5 text-blue-500" />
                     Resposta Automática Sugerida
                     {isEditingResponse && (
-                      <Badge variant="outline" className="ml-2 text-orange-600 border-orange-200">
+                      <Badge variant="outline" className="ml-2 text-blue-600 border-blue-100">
                         Editando
                       </Badge>
                     )}
@@ -536,7 +534,7 @@ export default function EmailClassifier() {
                         id="edit-response"
                         value={editedResponse}
                         onChange={(e) => setEditedResponse(e.target.value)}
-                        className="min-h-[150px] bg-white border-orange-200 focus:border-orange-400 focus:ring-orange-400 text-gray-900 placeholder:text-gray-500"
+                        className="min-h-[150px] bg-white border-blue-100 focus:border-blue-400 focus:ring-blue-400 text-gray-900 placeholder:text-gray-500"
                         placeholder="Digite sua resposta personalizada..."
                       />
                     </div>
@@ -548,7 +546,7 @@ export default function EmailClassifier() {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="bg-orange-600 border-orange-600 text-white hover:bg-orange-700 hover:text-white"
+                          className="bg-blue-500 border-blue-500 text-white hover:bg-blue-600 hover:text-white"
                           onClick={() => copyToClipboard(result.suggested_response)}
                         >
                           Copiar Resposta
@@ -568,7 +566,7 @@ export default function EmailClassifier() {
                         <Button
                           variant="default"
                           size="sm"
-                          className="bg-orange-600 hover:bg-orange-700 text-white"
+                          className="bg-blue-500 hover:bg-blue-600 text-white"
                           onClick={handleSaveResponse}
                         >
                           <Save className="h-4 w-4 mr-1" />
@@ -586,7 +584,7 @@ export default function EmailClassifier() {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="bg-orange-600 border-orange-600 text-white hover:bg-orange-700 hover:text-white"
+                          className="bg-blue-500 border-blue-500 text-white hover:bg-blue-600 hover:text-white"
                           onClick={() => copyToClipboard(editedResponse)}
                         >
                           Copiar
@@ -603,7 +601,7 @@ export default function EmailClassifier() {
                   onClick={resetForm}
                   variant="default"
                   size="lg"
-                  className="min-w-[150px] bg-orange-600 hover:bg-orange-700 text-white"
+                  className="min-w-[150px] bg-blue-500 hover:bg-blue-600 text-white"
                 >
                   Novo Email
                 </Button>
@@ -650,7 +648,7 @@ export default function EmailClassifier() {
                 max="50"
                 value={numEmailsToClassify}
                 onChange={(e) => setNumEmailsToClassify(Number.parseInt(e.target.value) || 0)}
-                className="col-span-3 border-gray-300 focus:ring-orange-500 focus:border-orange-500"
+                className="col-span-3 border-gray-300 focus:ring-blue-400 focus:border-blue-400"
               />
             </div>
           </div>
@@ -665,7 +663,7 @@ export default function EmailClassifier() {
             </Button>
             <Button
               onClick={handleAutomaticClassification}
-              className="bg-orange-600 hover:bg-orange-700 text-white"
+              className="bg-blue-500 hover:bg-blue-600 text-white"
               disabled={isAutoClassifying}
             >
               {isAutoClassifying ? (

@@ -1,6 +1,6 @@
 "use client"
 
-import { Mail, CalendarCheck, Trash2, Send, Edit3, Save, X, Loader2 } from "lucide-react" // Adicionado Loader2
+import { Mail, CalendarCheck, Trash2, Send, Edit3, Save, X, Loader2 } from "lucide-react"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useEffect, useState } from "react"
@@ -239,11 +239,11 @@ export default function RespostasSugeridas() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-orange-50 py-12 px-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-12 px-6">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <div className="bg-orange-600 p-3 rounded-full">
+            <div className="bg-blue-500 p-3 rounded-full">
               <CalendarCheck className="h-8 w-8 text-white" />
             </div>
           </div>
@@ -286,7 +286,7 @@ export default function RespostasSugeridas() {
         )}
 
         {loading ? (
-          <p className="text-center text-orange-600">Carregando respostas...</p>
+          <p className="text-center text-blue-500">Carregando respostas...</p>
         ) : erro ? (
           <p className="text-center text-red-600">{erro}</p>
         ) : (
@@ -298,14 +298,14 @@ export default function RespostasSugeridas() {
                 <Card key={resposta.id} className="bg-white shadow border border-gray-200">
                   <CardHeader>
                     <CardTitle className="text-lg text-black flex items-center gap-2">
-                      <Mail className="h-5 w-5 text-orange-600" />
+                      <Mail className="h-5 w-5 text-blue-500" />
                       Email Classificado
                       <Badge
                         variant="outline"
                         className={`ml-auto ${
                           resposta.category === "Produtivo"
                             ? "text-green-800 border-green-200"
-                            : "text-orange-800 border-orange-300"
+                            : "text-red-800 border-red-200"
                         }`}
                       >
                         {resposta.category}
@@ -325,7 +325,7 @@ export default function RespostasSugeridas() {
                       <Button
                         variant="outline"
                         size="sm"
-                        className="flex items-center gap-1 text-orange-600 border-orange-600 hover:bg-orange-100 bg-transparent"
+                        className="flex items-center gap-1 text-blue-500 border-blue-500 hover:bg-blue-100 bg-transparent"
                         onClick={() => handleForwardClick(resposta)}
                       >
                         <Send className="w-4 h-4" />
@@ -334,7 +334,7 @@ export default function RespostasSugeridas() {
                       <Button
                         variant="outline"
                         size="sm"
-                        className="flex items-center gap-1 text-blue-600 border-blue-600 hover:bg-blue-100 bg-transparent"
+                        className="flex items-center gap-1 text-blue-500 border-blue-500 hover:bg-blue-100 bg-transparent"
                         onClick={() => handleEditClick(resposta)}
                       >
                         <Edit3 className="w-4 h-4" />
@@ -387,7 +387,7 @@ export default function RespostasSugeridas() {
                 type="email"
                 value={recipientEmail}
                 onChange={(e) => setRecipientEmail(e.target.value)}
-                className="col-span-3 border-gray-300 focus:ring-orange-500 focus:border-orange-500"
+                className="col-span-3 border-gray-300 focus:ring-blue-400 focus:border-blue-400"
                 placeholder="destinatario@exemplo.com"
               />
             </div>
@@ -399,7 +399,7 @@ export default function RespostasSugeridas() {
                 id="email-subject"
                 value={emailSubject}
                 onChange={(e) => setEmailSubject(e.target.value)}
-                className="col-span-3 border-gray-300 focus:ring-orange-500 focus:border-orange-500"
+                className="col-span-3 border-gray-300 focus:ring-blue-400 focus:border-blue-400"
                 placeholder="Assunto do e-mail"
               />
             </div>
@@ -423,7 +423,7 @@ export default function RespostasSugeridas() {
             </Button>
             <Button
               onClick={handleSendEmail}
-              className="bg-orange-600 hover:bg-orange-700 text-white"
+              className="bg-blue-500 hover:bg-blue-600 text-white"
               disabled={isSendingEmail}
             >
               {isSendingEmail ? (
@@ -470,7 +470,7 @@ export default function RespostasSugeridas() {
                 id="edit-response-textarea"
                 value={editedResponseText}
                 onChange={(e) => setEditedResponseText(e.target.value)}
-                className="min-h-[200px] border-gray-300 focus:ring-orange-500 focus:border-orange-500 text-gray-900"
+                className="min-h-[200px] border-gray-300 focus:ring-blue-400 focus:border-blue-400 text-gray-900"
                 placeholder="Edite a resposta aqui..."
               />
             </div>
@@ -487,7 +487,7 @@ export default function RespostasSugeridas() {
             </Button>
             <Button
               onClick={handleSaveEditedResponse}
-              className="bg-orange-600 hover:bg-orange-700 text-white"
+              className="bg-blue-500 hover:bg-blue-600 text-white"
               disabled={isSavingEdit}
             >
               {isSavingEdit ? (

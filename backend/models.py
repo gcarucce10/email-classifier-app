@@ -20,6 +20,7 @@ class User(db.Model):
     """Modelo para armazenar usuários do sistema"""
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
+    nome = db.Column(db.String(120), nullable=False)
     password_hash = db.Column(db.String(512), nullable=False)
     smtp_password = db.Column(db.String(1024), nullable=False)
     reset_token = db.Column(db.String(100), nullable=True)

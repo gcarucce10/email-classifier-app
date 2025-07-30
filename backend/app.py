@@ -67,12 +67,13 @@ def health_check():
 def register():
     """Endpoint para registrar um novo usuário no banco de dados com validação SMTP."""
     data = request.get_json()
+    nome = data.get("nome")
     email = data.get("email")
     senha = data.get("senha")
     smtp_password = data.get("smtp_password")
 
-    if not email or not senha or not smtp_password:
-        return jsonify({"error": "Email, senha e SMTP password são obrigatórios"}), 400
+    if not email or not senha or not smtp_password or not nome:
+        return jsonify({"error": "Nome, email, senha e SMTP password são obrigatórios"}), 400
 
     if User.query.filter_by(email=email).first():
         return jsonify({"error": "Usuário já existe"}), 409
@@ -92,6 +93,7 @@ def register():
 
     # Criação e persistência
     novo_usuario = User(
+        nome=nome,
         email=email,
         password_hash=generate_password_hash(senha),
         smtp_password=smtp_password
@@ -152,11 +154,25 @@ def classify_api():
         # Classifica o email usando o modelo Gemini
         categoria = classify_email_gemini(texto_limpo)
         
-        # Gera uma resposta automática baseada na classificação
-        resposta = generate_reply_gemini(categoria, texto_original)
+        user_id = session.get("user_id")
+        if not user_id:
+            return jsonify({"error": "Usuário não autenticado"}), 401
+
+        usuario = User.query.get(user_id)
+        if not usuario:
+            return jsonify({"error": "Usuário não encontrado"}), 404
+
+        remetente = usuario.nome
         
-        # Calcula uma confiança simulada (você pode implementar uma lógica real)
-        confidence = 0.85 if "suporte" in texto_original.lower() or "solicitação" in texto_original.lower() else 0.75
+        # Gera uma resposta automática baseada na classificação
+        resposta = generate_reply_gemini(categoria, texto_original, remetente)
+        
+        if any(palavra in texto_original.lower() for palavra in ["suporte", "reclamação", "solicitação", "feliz", "projeto", "prazo", "parabéns", "urgente"]):
+            confidence = 0.90
+        elif len(texto_original.split()) > 100:
+            confidence = 0.85
+        else:
+            confidence = 0.75
         
         # Persistência no banco
         record = EmailRecord(
@@ -424,6 +440,10 @@ def classificar_caixa_entrada():
         return jsonify({"error": "Usuário não autenticado"}), 401
 
     user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "Usuário não encontrado"}), 404
+    
+    remetente = user.nome
 
     def extrair_corpo_limpo(msg):
         corpo = ""
@@ -481,7 +501,7 @@ def classificar_caixa_entrada():
 
             texto_limpo = preprocess_pt(corpo)
             categoria = classify_email_gemini(texto_limpo)
-            resposta = generate_reply_gemini(categoria, corpo)
+            resposta = generate_reply_gemini(categoria, corpo, remetente)
 
             novo = EmailRecord(
                 email_text=corpo,

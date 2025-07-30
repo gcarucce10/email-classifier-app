@@ -65,7 +65,7 @@ export default function ResetPasswordPage() {
       if (response.ok) {
         setSuccess("Senha redefinida com sucesso! Redirecionando para o login...")
         // Passa o email como query parameter para a página de login
-        router.push(`/login?email=${data.email}`) 
+        router.push(`/login?email=${data.email}`)
       } else {
         setError(data.error || "Erro ao redefinir a senha. Token inválido ou expirado.")
       }
@@ -78,11 +78,11 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-orange-50 px-4 py-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50 px-4 py-8">
       <Card className="w-full max-w-md shadow-xl rounded-lg border border-gray-200 bg-white">
         <CardHeader className="text-center space-y-2">
           <div className="flex justify-center">
-            <LockReset className="h-10 w-10 text-orange-600" />
+            <LockReset className="h-10 w-10 text-blue-500" />
           </div>
           <CardTitle className="text-3xl font-bold text-gray-900">Redefinir Senha</CardTitle>
         </CardHeader>
@@ -106,14 +106,14 @@ export default function ResetPasswordPage() {
                 placeholder="Nova Senha"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className="h-12 px-4 text-lg border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                className="h-12 px-4 text-lg border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
               />
               <Input
                 type="password"
                 placeholder="Confirmar Nova Senha"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="h-12 px-4 text-lg border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                className="h-12 px-4 text-lg border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
               />
             </>
           )}
@@ -121,7 +121,7 @@ export default function ResetPasswordPage() {
         <CardFooter className="flex flex-col space-y-4">
           <Button
             onClick={handleResetPassword}
-            className="w-full h-12 text-lg bg-orange-600 hover:bg-orange-700 text-white transition-colors"
+            className="w-full h-12 text-lg bg-blue-500 hover:bg-blue-600 text-white transition-colors"
             disabled={isLoading || !token || !!error}
           >
             {isLoading ? (
