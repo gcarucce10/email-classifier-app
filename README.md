@@ -1,123 +1,122 @@
-# Aplicação de Classificação e Resposta Automática de E-mails
+# Email Classification and Automatic Response Application
 
-## 📋 Descrição Geral
-Aplicação web full stack para automatizar a leitura, classificação e sugestão de respostas para e-mails das categorias **Produtivo** e **Improdutivo**. Utiliza NLP, Google Gemini, Flask (backend) e Next.js/React (frontend). Testes com exemplos reais de emails incluídos.
-
----
-
-## Contexto
-Solução para empresas, equipes ou profissionais que lidam com grande volume de emails, automatizando triagem e resposta.
+## 📋 General Description
+Full stack web application to automate reading, classification, and response suggestions for emails in the categories **Productive** and **Unproductive**. Uses NLP, Google Gemini, Flask (backend), and Next.js/React (frontend). Includes tests with real email examples.
 
 ---
 
-## Categorias de Classificação
-- **Produtivo:** Requer ação ou resposta urgente (ex.: solicitações, dúvidas, atualizações).
-- **Improdutivo:** Não requer ação imediata (ex.: felicitações, agradecimentos).
+## Context
+Solution for companies, teams, or professionals dealing with a large volume of emails, automating triage and responses.
 
 ---
 
-## Visão Geral
-Backend Flask recebe, pré-processa e classifica emails, sugerindo respostas automáticas via IA (Google Gemini). Frontend Next.js/React oferece interface moderna para envio, visualização, edição e cópia das respostas.
+## Classification Categories
+- **Productive:** Requires urgent action or response (e.g., requests, questions, updates).
+- **Unproductive:** Does not require immediate action (e.g., congratulations, thank-you notes).
 
 ---
 
-## Principais Fluxos
-1. Login e registro de usuários
-1. Envio do email (texto ou arquivo .txt/.pdf)
-2. Pré-processamento (tokenização, stopwords, lematização)
-3. Classificação via Gemini (Produtivo/Improdutivo + confiança)
-4. Sugestão automática de resposta
-5. Interação: copiar e editar resposta
-6. Envio de email integrado
-7. Classificação automática da caixa de entrada do email do usuário
+## Overview
+Flask backend receives, preprocesses, and classifies emails, suggesting automatic responses via AI (Google Gemini). Next.js/React frontend provides a modern interface for sending, viewing, editing, and copying responses.
 
 ---
 
-## Tecnologias
-- **Backend:** Flask (Servidor Python), pdfminer.six, NLTK, spaCy
-- **Banco de Dados:** PostgreSQL (Persistência de dados), Flask-SQLAlchemy (Flask-Migrate para migrações)
-- **IA/ML:** Google Gemini API (gemini-1.5-flash)
+## Main Flows
+1. User login and registration
+1. Email submission (text or .txt/.pdf file)
+2. Preprocessing (tokenization, stopwords, lemmatization)
+3. Classification via Gemini (Productive/Unproductive + confidence)
+4. Automatic response suggestion
+5. Interaction: copy and edit response
+6. Integrated email sending
+7. Automatic classification of the user’s inbox
+
+---
+
+## Technologies
+- **Backend:** Flask (Python Server), pdfminer.six, NLTK, spaCy
+- **Database:** PostgreSQL (Data persistence), Flask-SQLAlchemy (Flask-Migrate for migrations)
+- **AI/ML:** Google Gemini API (gemini-1.5-flash)
 - **Frontend:** React, Next.js, TailwindCSS
-- **Testes:** Casos reais em `casos_de_teste/`
+- **Tests:** Real cases in `casos_de_teste/`
 
 ---
 
-## Como Executar
-1. Clone o repositório:
-   ```bash
-   git clone https://github.com/gcarucce10/email-classifier-app.git
-   cd email-classifier-app
-   ```
-2. Crie o ambiente virtual Python:
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate
-   ```
-3. Instale dependências do backend:
-   ```bash
-   pip install -r requirements.txt
-   python -m spacy download pt_core_news_md
-   ```
-4. Execute o projeto:
-   ```bash
-   ./start.sh
-   ```
-   Acesse localmente no endereço: http://localhost:3000
+## How to Run
+1. Clone the repository:
+  ```bash
+  git clone https://github.com/gcarucce10/email-classifier-app.git
+  cd email-classifier-app
+  ```
+2. Create a Python virtual environment:
+  ```bash
+  python -m venv .venv
+  source .venv/bin/activate
+  ```
+3. Install backend dependencies:
+  ```bash
+  pip install -r requirements.txt
+  python -m spacy download pt_core_news_md
+  ```
+4. Start the project:
+  ```bash
+  ./start.sh
+  ```
+  Access locally at: http://localhost:3000
 
-   Observação: Variáveis de ambiente devem ser configuradas para a API do Google Gemini e outras credenciais necessárias (ex.: Email que tratará recuperação de senhas e banco de dados). Numa futura atualização, será realizado deploy da aplicação e essa sessão poderá ser desconsiderada.
+  Note: Environment variables must be configured for the Google Gemini API and other required credentials (e.g., email for password recovery and database connection). In a future update, deployment will be provided and this section may be disregarded.
 
-> Node.js é necessário para o frontend funcionar.
+> Node.js is required for the frontend to work.
 
 ---
 
-## Estrutura do Projeto
+## Project Structure
 ```
 backend/
-  app.py                # Backend Flask principal
-  gemini_client.py      # Integração com Google Gemini API
-  preprocess.py         # Pré-processamento de texto
-  models.py             # Modelos de entidades no banco de dados
-  templates/            # Templates HTML (Flask) (teste de backend)
-  requirements.txt      # Requisitos Python
+  app.py                # Main Flask backend
+  gemini_client.py      # Google Gemini API integration
+  preprocess.py         # Text preprocessing functions
+  models.py             # Database entity models
+  templates/            # HTML templates (Flask, backend testing)
+  requirements.txt      # Python requirements
 frontend/
-  src/app/page.tsx      # Página principal Next.js/React
-  ...                   # Outros arquivos (telas) do frontend
-casos_de_teste/         # Casos de teste (arquivos) 
-  improdutivo.pdf       # Exemplo de email improdutivo em .pdf
-  ...                   # Outros casos de teste
+  src/app/page.tsx      # Main Next.js/React page
+  ...                   # Other frontend files (pages/components)
+test_cases/             # Backend test cases (files)
+  improdutivo.pdf       # Example of unproductive email in .pdf
+  ...                   # Other test cases
 README.md
-start.sh                # Script de inicialização
+start.sh                # Startup script
 ```
 ---
 
-## Funcionalidades Adicionais
+
+## Additional Features
 
 - **Login:**
-  - A aplicação conta com uma página primária dedicada para autenticação, permitindo que o usuário faça login de forma segura.
-  - O acesso às funcionalidades principais é restrito a usuários autenticados, garantindo privacidade e controle de uso.
+  - The application provides a dedicated login page, allowing users to authenticate securely.
+  - Access to main features is restricted to authenticated users, ensuring privacy and usage control.
 
-- **Registro de Usuário:**
-  - Usuários devem se cadastrar na plataforma para ter acesso aos serviços.
-  - O registro inclui nome, email e senha e senha de app Gmail.
+- **User Registration:**
+  - Users must register on the platform to access services.
+  - Registration includes name, email, password, and Gmail app password.
 
-- **Recuperação de Senha (Esqueci a Senha):**
-  - A aplicação oferece funcionalidade de recuperação de senha, permitindo que o usuário solicite redefinição por email caso esqueça sua senha.
-  - O processo é seguro e segue boas práticas de autenticação.
+- **Password Recovery (Forgot Password):**
+  - The application offers a password recovery feature, allowing users to request a reset via email if they forget their password.
+  - The process is secure and follows best authentication practices.
 
-- **Página de Respostas:**
-  - Após a classificação, o usuário pode visualizar a resposta sugerida, editar o texto conforme necessário e copiar para uso externo.
-  - O histórico de respostas é exibido, facilitando o acompanhamento das interações realizadas.
+- **Responses Page:**
+  - After classification, users can view the suggested response, edit the text as needed, and copy it for external use.
+  - A history of responses is displayed, making it easy to track interactions.
 
-- **Envio de Emails Integrado:**
-  - Na página de Respostas, a aplicação permite o envio direto de emails a partir da interface, utilizando a resposta gerada ou personalizada pelo usuário.
-  - O envio pode ser feito para destinatários informados, integrando o fluxo de classificação e resposta ao processo real de comunicação.
+- **Integrated Email Sending:**
+  - On the Responses page, the application allows direct email sending from the interface, using the generated or customized response.
+  - Emails can be sent to specified recipients, integrating the classification and response flow with real communication.
 
-- **Classificação Automática da Caixa de Entrada:**
-  - A aplicação pode acessar a caixa de entrada do usuário (inbox do endereço de email cadastrado), classificando automaticamente os emails recebidos. Dispensando o trabalho manual de colar o texto ou anexar arquivos.
+- **Automatic Inbox Classification:**
+  - The application can access the user's inbox (registered email address), automatically classifying received emails. This eliminates the manual work of pasting text or attaching files.
 
-Essas funcionalidades tornam o sistema completo para uso corporativo, integrando automação, gestão de respostas, comunicação, segurança e controle de dados em uma única plataforma.
+These features make the system complete for corporate use, integrating automation, response management, communication, security, and data control in a single platform.
 
 ---
-
-
 
